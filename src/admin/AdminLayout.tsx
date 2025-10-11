@@ -5,8 +5,10 @@ import { useAdminStore } from "./context/AdminContext"
 
 import { useNavigate } from "react-router-dom"
 
-import { Header } from './components/Header.tsx'
-import { MenuLateral } from './components/MenuLateral.tsx'
+
+import Header  from '../components/Header.tsx'
+import { MenuLateral } from '../components/MenuLateral.tsx'
+
 
 export default function AdminLayout() {
   const { admin } = useAdminStore()

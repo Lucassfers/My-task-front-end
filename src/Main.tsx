@@ -11,7 +11,6 @@ import CardLista from './components/CardLista.tsx'
 import './index.css'
 import AdminLogin from './admin/AdminLogin.tsx'
 import AdminDashboard from './admin/AdminDashBoard.tsx'
-import CadastroAdmin from './admin/AdminCadastro.tsx'
 import AdminLayout from './admin/AdminLayout.tsx'
 
 const rotas = createBrowserRouter([
@@ -25,10 +24,6 @@ const rotas = createBrowserRouter([
     children: [
       { index: true, element: <AdminDashboard /> },
     ]
-  },
-  {
-    path: "/admin/cadastro",
-    element: <CadastroAdmin/>
   },
   {
     path: '/',
