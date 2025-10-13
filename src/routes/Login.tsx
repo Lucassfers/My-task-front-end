@@ -49,6 +49,9 @@ export default function Login() {
       const dados = await response.json()
       logaUsuario(dados)
 
+      // Salva o token no localStorage
+      localStorage.setItem("token", dados.token)
+
       if (data.manter) {
         localStorage.setItem("usuarioKey", dados.id)
       } else {
