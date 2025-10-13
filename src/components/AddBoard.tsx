@@ -13,9 +13,11 @@ type BoardForm = {
 export async function AddBoard(data: BoardForm) {
   const { register, handleSubmit, reset } = useForm<BoardForm>()
   // const { boards } = useBoardStore()
+  const token = localStorage.getItem("token")
   const response = await fetch(`${apiUrl}/boards`, {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`  
     },
     method: "POST",
     body: JSON.stringify({
