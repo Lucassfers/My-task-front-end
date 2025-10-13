@@ -13,7 +13,7 @@ export default function Header({ onPesquisa }: HeaderProps) {
   const navigate = useNavigate()
 
   function primeiroNome(nomeCompleto: string) {
-    return nomeCompleto.split(" ")[0];
+    return nomeCompleto.split(" ")[0] ?? "";
   }
 
   function usuarioSair() {
@@ -25,6 +25,7 @@ export default function Header({ onPesquisa }: HeaderProps) {
       navigate("/login")
     }
   }
+  const logado = !!usuario?.id
 
   return (
     <header className="bg-white d py-4">
@@ -61,7 +62,7 @@ export default function Header({ onPesquisa }: HeaderProps) {
         </div>
 
         <div className="flex items-center">
-          {usuario.id ? (
+          {logado ? (
             <>
               <span className="text-black font-medium text-[1rem] cursor-pointer px-4 py-2 rounded-lg
             transition-colors duration-500 ">

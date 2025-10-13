@@ -1,9 +1,9 @@
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 import { Toaster, toast } from 'sonner'
 import { useAdminStore } from "./context/AdminContext"
 
-import { useNavigate } from "react-router-dom"
 import { FaRegCalendarCheck } from "react-icons/fa"
 
 const apiUrl = import.meta.env.VITE_API_URL
@@ -11,6 +11,7 @@ const apiUrl = import.meta.env.VITE_API_URL
 type Inputs = {
   email: string
   senha: string
+  manter: boolean
 }
 
 export default function AdminLogin() {
@@ -30,9 +31,16 @@ export default function AdminLogin() {
     })
 
     if (response.status == 200) {
-      const admin = await response.json()
-      logaAdmin(admin)
-      navigate("/admin", { replace: true })
+      const dados = await response.json()
+      logaAdmin(dados)
+      if (data.manter) {
+        localStorage.setItem("adminKey", dados.id)
+      } else {
+        if (localStorage.getItem("adminKey")) {
+          localStorage.removeItem("adminKey")
+        }
+      }
+      navigate("/dashboard/gerais", { replace: true })
     } else if (response.status == 400) {
       toast.error("Erro... Login ou senha incorretos")
     }
@@ -59,6 +67,20 @@ export default function AdminLogin() {
             <input type="password" id="password" className="w-full p-2 border-b-2 border-blue-500 focus:outline-none"
               {...register("senha")}
               required />
+          </div>
+          <div className="flex items-start">
+            <div className="flex items-center h-5">
+              <input
+                type="checkbox"
+                id="remember"
+                aria-describedby="remember"
+                className="w-4 h-4 border rounded bg-gray-50"
+                {...register("manter")}
+              />
+            </div>
+            <div className="ml-3 text-sm">
+              <label htmlFor="remember" className="text-gray-500">Manter Conectado</label>
+            </div>
           </div>
           <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded transition-colors hover:bg-blue-700 tracking-widest my-7">Entrar</button>
         </form>
