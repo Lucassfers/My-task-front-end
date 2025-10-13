@@ -12,6 +12,9 @@ import './index.css'
 import AdminLogin from './admin/AdminLogin.tsx'
 import AdminDashboard from './admin/AdminDashBoard.tsx'
 import AdminLayout from './admin/AdminLayout.tsx'
+import AdminCadAdmin from './admin/AdminCadAdmin.tsx'
+import AdminAlterUsuario from './admin/AdminUsuario.tsx'
+// import AdminBoardsUsuario from './admin/'
 
 const rotas = createBrowserRouter([
   {
@@ -23,7 +26,9 @@ const rotas = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { index: true, element: <AdminDashboard /> },
-    ]
+      { path: "adminCadAdmin", element: <AdminCadAdmin/> },
+      { path: "AdminUsuario", element: <AdminAlterUsuario/>}
+    ],
   },
   {
     path: '/',
