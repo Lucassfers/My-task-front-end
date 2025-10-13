@@ -1,7 +1,9 @@
 import type { BoardType } from "./utils/BoardType"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { CardBoard } from "./components/CardBoard"
 import NewBoard from "./components/NewBoard"
+import { useUsuarioStore } from "./context/UsuarioContext"
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -12,16 +14,43 @@ type AppProps = {
 export default function App({ termoPesquisa }: AppProps) {
   const [boards, setBoards] = useState<BoardType[]>([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
+  const { usuario } = useUsuarioStore()
 
   useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (!token || !usuario.id) {
+      navigate("/login")
+      return
+    }
+    
     async function buscaBoards() {
-      const response = await fetch(`${apiUrl}/boards`)
-      const dados = await response.json()
-      setBoards(dados)
+      try {
+        const response = await fetch(`${apiUrl}/boards`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        })
+
+        if (response.status === 401) {
+          localStorage.removeItem("token")
+          localStorage.removeItem("usuarioKey")
+          navigate("/login")
+          return
+        }
+        if (!response.ok) {
+          throw new Error("Erro ao buscar boards")
+        }
+        
+        const dados = await response.json()
+        setBoards(dados)
+      } catch (error) {
+        console.error("Erro ao buscar boards:", error)
+      }
       setLoading(false)
     }
     buscaBoards()
-  }, [])
+  }, [navigate, usuario.id])
 
   // Filtra boards baseado no termo de pesquisa
   const boardsFiltrados = termoPesquisa && termoPesquisa.trim().length > 0
