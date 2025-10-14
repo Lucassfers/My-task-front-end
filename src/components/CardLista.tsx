@@ -30,7 +30,12 @@ export default function CardLista() {
         (async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${apiUrl}/boards/${boardId}/listas/tasks/comentarios`);
+                const token = localStorage.getItem("token");
+                const response = await fetch(`${apiUrl}/boards/${boardId}/listas/tasks/comentarios`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 const dados = await response.json();
                 setBoard(dados);
                 setListas(dados.listas ?? []);
@@ -84,9 +89,13 @@ export default function CardLista() {
 
     async function enviarComentario(data: Inputs) {
         if (!openTaskId) return;
+        const token = localStorage.getItem("token");
         const response = await fetch(`${apiUrl}/comentarios`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify({
                 conteudo: data.conteudo,
                 usuarioId: usuario.id,
