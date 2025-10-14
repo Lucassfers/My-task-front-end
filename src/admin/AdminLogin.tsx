@@ -34,10 +34,10 @@ export default function AdminLogin() {
       const dados = await response.json()
       logaAdmin(dados)
       if (data.manter) {
-        localStorage.setItem("adminKey", dados.id)
+        localStorage.setItem("usuarioKey", dados.id)
       } else {
-        if (localStorage.getItem("adminKey")) {
-          localStorage.removeItem("adminKey")
+        if (localStorage.getItem("usuarioKey")) {
+          localStorage.removeItem("usuarioKey")
         }
       }
       navigate("/dashboard/gerais", { replace: true })
