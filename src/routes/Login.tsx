@@ -53,13 +53,17 @@ export default function Login() {
       localStorage.setItem("token", dados.token)
 
       if (data.manter) {
-        localStorage.setItem("usuarioKey", dados.id)
+        localStorage.setItem("usuarioKey", JSON.stringify({
+          id: dados.id,
+          token: dados.token,
+          nome: dados.nome
+        }))
       } else {
         if (localStorage.getItem("usuarioKey")) {
           localStorage.removeItem("usuarioKey")
         }
       }
-      navigate("/")
+      navigate("/boards")
     } else {
       toast.error("Erro... Login ou senha incorretos")
     }
