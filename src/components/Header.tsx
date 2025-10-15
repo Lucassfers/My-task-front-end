@@ -28,6 +28,9 @@ export default function Header({ onPesquisa }: HeaderProps) {
       if (localStorage.getItem("usuarioKey")) {
         localStorage.removeItem("usuarioKey")
       }
+      if (localStorage.getItem("token")) {
+        localStorage.removeItem("token")
+      }
       navigate("/login")
     }
   }

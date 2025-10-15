@@ -39,7 +39,6 @@ export default function App({ termoPesquisa }: AppProps) {
     buscaBoardsPessoais()
   }, [])
 
-  // Filtra boards baseado no termo de pesquisa
   const boardsFiltrados = termoPesquisa && termoPesquisa.trim().length > 0
     ? boards.filter(board => 
         board.titulo.toLowerCase().includes(termoPesquisa.toLowerCase()) ||
