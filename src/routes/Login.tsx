@@ -44,22 +44,20 @@ export default function Login() {
       method: "POST",
       body: JSON.stringify({ email: data.email, senha: data.senha }),
     })
-
-    if (response.status === 200) {
-      const dados = await response.json()
-      logaUsuario(dados)
-
-      if (data.manter) {
-        localStorage.setItem("usuarioKey", dados.id)
-      } else {
-        if (localStorage.getItem("usuarioKey")) {
-          localStorage.removeItem("usuarioKey")
-        }
-      }
-      navigate("/")
-    } else {
+    if(!response.ok){
       toast.error("Erro... Login ou senha incorretos")
+      return
     }
+
+    const dados = await response.json()
+    logaUsuario(dados)
+
+    if(data.manter){
+      localStorage.setItem("usuarioKey", JSON.stringify(dados))
+    } else {
+      localStorage.removeItem("usuarioKey")
+    }
+    navigate("/")
   }
 
   return (
