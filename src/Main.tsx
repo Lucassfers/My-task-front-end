@@ -14,6 +14,8 @@ import AdminDashboard from './admin/AdminDashBoard.tsx'
 import AdminLayout from './admin/AdminLayout.tsx'
 import AdminCadAdmin from './admin/AdminCadAdmin.tsx'
 import AdminAlterUsuario from './admin/AdminUsuario.tsx'
+import AdminHeader from './admin/AdminHeader.tsx'
+
 // import AdminBoardsUsuario from './admin/'
 
 const rotas = createBrowserRouter([

@@ -44,29 +44,20 @@ export default function Login() {
       method: "POST",
       body: JSON.stringify({ email: data.email, senha: data.senha }),
     })
-
-    if (response.status === 200) {
-      const dados = await response.json()
-      logaUsuario(dados)
-
-      // Salva o token no localStorage
-      localStorage.setItem("token", dados.token)
-
-      if (data.manter) {
-        localStorage.setItem("usuarioKey", JSON.stringify({
-          id: dados.id,
-          token: dados.token,
-          nome: dados.nome
-        }))
-      } else {
-        if (localStorage.getItem("usuarioKey")) {
-          localStorage.removeItem("usuarioKey")
-        }
-      }
-      navigate("/boards")
-    } else {
+    if(!response.ok){
       toast.error("Erro... Login ou senha incorretos")
+      return
     }
+
+    const dados = await response.json()
+    logaUsuario(dados)
+
+    if(data.manter){
+      localStorage.setItem("usuarioKey", JSON.stringify(dados))
+    } else {
+      localStorage.removeItem("usuarioKey")
+    }
+    navigate("/")
   }
 
   return (
