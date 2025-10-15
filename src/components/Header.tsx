@@ -11,6 +11,12 @@ type HeaderProps = {
 export default function Header({ onPesquisa }: HeaderProps) {
   const { usuario, deslogaUsuario } = useUsuarioStore()
   const navigate = useNavigate()
+  const armazenado = (() => {
+  try { return JSON.parse(localStorage.getItem("usuarioKey") || "null") } catch { return null }
+})()
+  const usuarioAtual = usuario ?? armazenado
+  const logado = !!usuarioAtual?.id
+  const nome = usuarioAtual?.nome ?? ""
 
   function primeiroNome(nomeCompleto: string) {
     return nomeCompleto.split(" ")[0] ?? "";
@@ -25,7 +31,6 @@ export default function Header({ onPesquisa }: HeaderProps) {
       navigate("/login")
     }
   }
-  const logado = !!usuario?.id
 
   return (
     <header className="bg-white d py-4">
@@ -66,7 +71,7 @@ export default function Header({ onPesquisa }: HeaderProps) {
             <>
               <span className="text-black font-medium text-[1rem] cursor-pointer px-4 py-2 rounded-lg
             transition-colors duration-500 ">
-                Olá, {primeiroNome(usuario.nome)}!
+                Olá, {primeiroNome(nome)}!
               </span>
               <button
                 onClick={usuarioSair}

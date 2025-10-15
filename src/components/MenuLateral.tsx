@@ -22,56 +22,18 @@ export function MenuLateral() {
       <div className="h-full px-3 py-4 overflow-y-auto bg-white dark:bg-gray-800">
         <ul className="space-y-2 font-medium">
           <li>
-            <Link to="/admin/gerais" className="flex items-center p-2">
+            <Link to="/" className="flex items-center p-2">
               <span className="h-5 text-gray-600 text-2xl">
               </span>
-              <span className="ms-2 mt-1">Geral</span>
+              <span className="ms-2 mt-1">Início</span>
             </Link>
           </li>
           <li>
-            <Link to="/admin/boardsUsuario" className="flex items-center p-2">
+            <Link to="/boards" className="flex items-center p-2">
               <span className="h-5 text-gray-600 text-2xl">
               </span>
-              <span className="ms-2 mt-1">Boards Usuario</span>
+              <span className="ms-2 mt-1">Boards</span>
             </Link>
-          </li>
-          <li>
-            <Link to="/admin/comentariosUsuario" className="flex items-center p-2">
-              <span className="h-5 text-gray-600 text-2xl">
-              </span>
-              <span className="ms-2 mt-1">Comentários Usuario</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/admin/boardsMotivo" className="flex items-center p-2 cursor-pointer">
-              <span className="h-5 text-gray-600 text-2xl">
-              </span>
-              <span className="ms-2 mt-1">Boards Motivo</span>
-            </Link>
-          </li>
-          <li>
-              <Link to="/admin/adminCadAdmin" className="flex items-center p-2 cursor-pointer">
-                <span className="h-5 text-gray-600 text-2xl">
-                  <FaRegUser />
-                </span>
-                <span className="ms-2 mt-1">Cadastro de Admins</span>
-              </Link>
-          </li>
-          <li>
-              <Link to="/admin/AdminUsuario" className="flex items-center p-2 cursor-pointer">
-                <span className="h-5 text-gray-600 text-2xl">
-                  <FaRegUser />
-                </span>
-                <span className="ms-2 mt-1">Gerenciamento de Usuarios</span>
-              </Link>
-          </li>
-             <li>
-            <span className="flex items-center p-2 cursor-pointer">
-              <span className="h-5 text-gray-600 text-2xl">
-                <IoExitOutline />
-              </span>
-              <span className="ms-2 mt-1" onClick={adminSair}>Sair do Sistema</span>
-            </span>
           </li>
         </ul>
       </div>

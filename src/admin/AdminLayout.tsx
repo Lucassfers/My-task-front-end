@@ -4,7 +4,7 @@ import { Toaster } from 'sonner'
 import { useAdminStore } from "./context/AdminContext"
 import { useNavigate } from "react-router-dom"
 import Header  from '../components/Header.tsx'
-import { MenuLateral } from '../components/MenuLateral.tsx'
+import { MenuLateralAdmin } from '../admin/AdminMenuLateral.tsx'
 
 
 export default function AdminLayout() {
@@ -26,7 +26,7 @@ export default function AdminLayout() {
   return (
     <>
       <Header />
-      <MenuLateral />
+      <MenuLateralAdmin />
       <div className="p-4 sm:ml-64">
         <Outlet />
       </div>

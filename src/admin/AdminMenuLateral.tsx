@@ -3,7 +3,7 @@ import { FaRegUser } from "react-icons/fa"
 import { useAdminStore } from "./context/AdminContext"
 import { Link, useNavigate } from "react-router-dom"
 
-export function MenuLateral() {
+export function MenuLateralAdmin() {
   const navigate = useNavigate()
   const { admin, deslogaAdmin } = useAdminStore()
 
@@ -49,7 +49,6 @@ export function MenuLateral() {
           <li>
               <Link to="/admin/adminCadAdmin" className="flex items-center p-2 cursor-pointer">
                 <span className="h-5 text-gray-600 text-2xl">
-                  <FaRegUser />
                 </span>
                 <span className="ms-2 mt-1">Cadastro de Admins</span>
               </Link>
@@ -57,7 +56,6 @@ export function MenuLateral() {
           <li>
               <Link to="/admin/AdminUsuario" className="flex items-center p-2 cursor-pointer">
                 <span className="h-5 text-gray-600 text-2xl">
-                  <FaRegUser />
                 </span>
                 <span className="ms-2 mt-1">Gerenciamento de Usuarios</span>
               </Link>
