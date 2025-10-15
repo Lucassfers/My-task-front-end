@@ -30,15 +30,18 @@ export default function CardLista() {
         (async () => {
             try {
                 setLoading(true);
-                const token = localStorage.getItem("token");
+                const dados = localStorage.getItem("usuarioKey");
+                const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+                const token = usuarioData?.token ?? "";
+                
                 const response = await fetch(`${apiUrl}/boards/${boardId}/listas/tasks/comentarios`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
                 });
-                const dados = await response.json();
-                setBoard(dados);
-                setListas(dados.listas ?? []);
+                const dados2 = await response.json();
+                setBoard(dados2);
+                setListas(dados2.listas ?? []);
             } catch (e) {
                 console.error(e);
             } finally {
@@ -89,7 +92,10 @@ export default function CardLista() {
 
     async function enviarComentario(data: Inputs) {
         if (!openTaskId) return;
-        const token = localStorage.getItem("token");
+        const dados = localStorage.getItem("usuarioKey");
+        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+        const token = usuarioData?.token ?? "";
+        
         const response = await fetch(`${apiUrl}/comentarios`, {
             method: "POST",
             headers: { 
