@@ -40,7 +40,7 @@ export default function AdminLogin() {
           localStorage.removeItem("usuarioKey")
         }
       }
-      navigate("/dashboard/gerais", { replace: true })
+      navigate(`/admin`, { replace: true })
     } else if (response.status == 400) {
       toast.error("Erro... Login ou senha incorretos")
     }
