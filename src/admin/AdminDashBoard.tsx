@@ -20,11 +20,11 @@ type graficoBoardsMotivoType = {
 }
 
 type geralDadosType = {
-  boards: number
-  listas: number
-  tasks: number
-  comentarios: number
-  usuarios: number
+  totalBoards: number
+  totalListas: number
+  totalTasks: number
+  totalComentarios: number
+  totalUsuarios: number
 }
 
 export default function AdminDashboard() {
@@ -65,6 +65,7 @@ export default function AdminDashboard() {
 
   }, [])
 
+
   const listaBoardMotivo = boardMotivo.map(item => (
     { x: item.motivo, y: item.num }
   ))
@@ -84,13 +85,28 @@ export default function AdminDashboard() {
       <div className="w-2/3 flex justify-between mx-auto mb-5">
         <div className="border-blue-600 border rounded p-6 w-1/3 me-3">
           <span className="bg-blue-100 text-blue-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-blue-900 dark:text-blue-300">
-            {dados.boards}</span>
-          <p className="font-bold mt-2 text-center">Nº Boards por Motivo</p>
+            {dados.totalUsuarios}</span>
+          <p className="font-bold mt-2 text-center">Nº Usuarios </p>
+        </div>
+        <div className="border-blue-600 border rounded p-6 w-1/3 me-3">
+          <span className="bg-blue-100 text-blue-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-blue-900 dark:text-blue-300">
+            {dados.totalBoards}</span>
+          <p className="font-bold mt-2 text-center">Nº Boards</p>
         </div>
         <div className="border-red-600 border rounded p-6 w-1/3 me-3">
           <span className="bg-red-100 text-red-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-red-900 dark:text-red-300">
-            {dados.comentarios}</span>
-          <p className="font-bold mt-2 text-center">Nº Boards</p>
+            {dados.totalListas}</span>
+          <p className="font-bold mt-2 text-center">Nº Listas</p>
+        </div>
+        <div className="border-red-600 border rounded p-6 w-1/3 me-3">
+          <span className="bg-red-100 text-red-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-red-900 dark:text-red-300">
+            {dados.totalTasks}</span>
+          <p className="font-bold mt-2 text-center">Nº Tarefas</p>
+        </div>
+        <div className="border-red-600 border rounded p-6 w-1/3 me-3">
+          <span className="bg-red-100 text-red-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-red-900 dark:text-red-300">
+            {dados.totalComentarios}</span>
+          <p className="font-bold mt-2 text-center">Nº Comentários</p>
         </div>
         
       </div>
@@ -105,10 +121,11 @@ export default function AdminDashboard() {
             innerRadius={50}
             labelRadius={80}
             theme={VictoryTheme.clean}
+            labels={({ datum }: any) => `${datum.y} ${datum.x}`}
             style={{
               labels: {
-                fontSize: 10,
-                fill: "#f0f0",
+                fontSize: 8,
+                fill: "#000",
                 fontFamily: "Arial",
                 fontWeight: "bold"
               }
@@ -118,7 +135,7 @@ export default function AdminDashboard() {
             textAnchor="middle"
             style={{
               fontSize: 12,
-              fill: "#f00",
+              fill: "#000000",
               fontFamily: "Arial",
               fontWeight: "bold"
             }}
@@ -134,13 +151,14 @@ export default function AdminDashboard() {
             width={400}
             height={400}
             data={listaComentarioUsuario}
-            innerRadius={50}
-            labelRadius={80}
+            innerRadius={60}
+            labelRadius={70}
             theme={VictoryTheme.clean}
+            labels={({ datum }: any) => `${datum.y} ${datum.x}`}
             style={{
               labels: {
-                fontSize: 10,
-                fill: "#f0f0",
+                fontSize: 8,
+                fill: "#000000",
                 fontFamily: "Arial",
                 fontWeight: "bold"
               }
@@ -150,13 +168,13 @@ export default function AdminDashboard() {
             textAnchor="middle"
             style={{
               fontSize: 12,
-              fill: "#f00",
+              fill: "#000000",
               fontFamily: "Arial",
               fontWeight: "bold"
             }}
             x={200}
             y={200}
-            text={["Comentários", "por Marca"]}
+            text={["Comentários", "por Usuário"]}
           />
         </svg>
 
@@ -167,12 +185,13 @@ export default function AdminDashboard() {
             height={400}
             data={listaBoardUsuario}
             innerRadius={50}
-            labelRadius={80}
+            labelRadius={70}
             theme={VictoryTheme.clean}
+            labels={({ datum }: any) => `${datum.y} ${datum.x}`}
             style={{
               labels: {
-                fontSize: 10,
-                fill: "#fff",
+                fontSize: 8,
+                fill: "#000000",
                 fontFamily: "Arial",
                 fontWeight: "bold"
               }
@@ -182,7 +201,7 @@ export default function AdminDashboard() {
             textAnchor="middle"
             style={{
               fontSize: 12,
-              fill: "#f00",
+              fill: "#000000",
               fontFamily: "Arial",
               fontWeight: "bold"
             }}
