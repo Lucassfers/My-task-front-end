@@ -13,7 +13,6 @@ export default function Header({ onPesquisa }: HeaderProps) {
   const navigate = useNavigate()
   const armazenado = (() => {
   try { 
-    // Busca primeiro no localStorage, depois no sessionStorage
     const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey")
     return JSON.parse(dados || "null") 
   } catch { return null }
@@ -29,11 +28,8 @@ export default function Header({ onPesquisa }: HeaderProps) {
   function usuarioSair() {
     if (confirm("Confirma saída do sistema?")) {
       deslogaUsuario()
-      // Limpar AMBOS os storages
       localStorage.removeItem("usuarioKey")
       sessionStorage.removeItem("usuarioKey")
-      localStorage.removeItem("token")
-      sessionStorage.removeItem("token")
       navigate("/login")
     }
   }
