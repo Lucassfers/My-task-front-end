@@ -60,6 +60,14 @@ export default function Layout() {
     );
   }
 
+  if (location.pathname === '/login' || location.pathname === '/cadastro') {
+    return (
+      <div className="bg-[#F5F7FA] min-h-screen">
+        <Outlet />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#F5F7FA] min-h-screen">
       <Header />
