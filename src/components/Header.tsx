@@ -12,7 +12,11 @@ export default function Header({ onPesquisa }: HeaderProps) {
   const { usuario, deslogaUsuario } = useUsuarioStore()
   const navigate = useNavigate()
   const armazenado = (() => {
-  try { return JSON.parse(localStorage.getItem("usuarioKey") || "null") } catch { return null }
+  try { 
+    // Busca primeiro no localStorage, depois no sessionStorage
+    const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey")
+    return JSON.parse(dados || "null") 
+  } catch { return null }
 })()
   const usuarioAtual = usuario ?? armazenado
   const logado = !!usuarioAtual?.id
@@ -25,12 +29,11 @@ export default function Header({ onPesquisa }: HeaderProps) {
   function usuarioSair() {
     if (confirm("Confirma saída do sistema?")) {
       deslogaUsuario()
-      if (localStorage.getItem("usuarioKey")) {
-        localStorage.removeItem("usuarioKey")
-      }
-      if (localStorage.getItem("token")) {
-        localStorage.removeItem("token")
-      }
+      // Limpar AMBOS os storages
+      localStorage.removeItem("usuarioKey")
+      sessionStorage.removeItem("usuarioKey")
+      localStorage.removeItem("token")
+      sessionStorage.removeItem("token")
       navigate("/login")
     }
   }
