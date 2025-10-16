@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form"
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { useUsuarioStore } from "../context/UsuarioContext"
 
@@ -17,27 +16,6 @@ export default function Login() {
   const { logaUsuario } = useUsuarioStore()
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   const script = document.createElement("script")
-  //   script.src = "/finisher-header.es5.min.js"
-  //   script.onload = () => {
-  //     // @ts-ignore
-  //     if (window.FinisherHeader) {
-  //       // @ts-ignore
-  //       new window.FinisherHeader({
-  //         count: 12,
-  //         size: { min: 1300, max: 1500, pulse: 0 },
-  //         speed: { x: { min: 0.6, max: 1 }, y: { min: 0.6, max: 3 } },
-  //         colors: { background: "#fff", particles: ["#1cffb3", "#87ddfe", "#231efe", "#5f0aff"] },
-  //         blending: "lighten",
-  //         opacity: { center: 0.6, edge: 0 },
-  //         skew: 0,
-  //         shapes: ["c"],
-  //       })
-  //     }
-  //   }
-  //   document.body.appendChild(script)
-  // }, [])
 
   async function verificaLogin(data: Inputs) {
     const response = await fetch(`${apiUrl}/login`, {
@@ -46,22 +24,24 @@ export default function Login() {
       body: JSON.stringify({ email: data.email, senha: data.senha }),
     })
 
-    if (response.status === 200) {
+    if (response.status == 200) {
       const dados = await response.json()
+      // Garante que o token venha no objeto salvo e no estado
       logaUsuario(dados)
-
+      const payload = JSON.stringify(dados)
       if (data.manter) {
-        localStorage.setItem("usuarioKey", dados.id)
+        localStorage.setItem("usuarioKey", payload)
+        sessionStorage.removeItem("usuarioKey") 
       } else {
-        if (localStorage.getItem("usuarioKey")) {
-          localStorage.removeItem("usuarioKey")
-        }
+        sessionStorage.setItem("usuarioKey", payload)
+        localStorage.removeItem("usuarioKey") 
       }
-      navigate("/")
-    } else {
-      toast.error("Erro... Login ou senha incorretos")
-    }
-  }
+
+            navigate("/boards")
+        } else {
+            toast.error("Erro... Login ou senha incorretos")
+        }
+   }
 
   return (
     <div className="relative flex items-center justify-center min-h-screen">
@@ -102,7 +82,7 @@ export default function Login() {
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded transition-colors hover:bg-blue-700 tracking-widest my-7"
-          >
+            >
             ENTRAR
           </button>
         </form>
@@ -111,7 +91,7 @@ export default function Login() {
           onClick={() => navigate("/cadastro")}
           className="flex justify-center text-gray-500 mb-7 transition-all hover:text-lg bg-transparent border-none cursor-pointer itemscenter mx-auto"
         >
-          Não possui conta? Cadastre-se!
+          Não possui conta? <Link to="/cadastro" className="text-blue-600 hover:underline ml-1">Cadastre-se!</Link>
         </button>
       </div>
     </div>

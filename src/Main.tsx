@@ -1,18 +1,21 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
+import { Toaster } from 'sonner'
 
 import App from './App.tsx'
 import Layout from './Layout.tsx'
 import Login from './routes/Login.tsx'
-import Cadastro from './routes/Cadastro.tsx'
 import CardLista from './components/CardLista.tsx'
+import CadastroUsuario from './routes/Cadastro.tsx'
 
 import './index.css'
 import AdminLogin from './admin/AdminLogin.tsx'
 import AdminDashboard from './admin/AdminDashBoard.tsx'
-import CadastroAdmin from './admin/AdminCadastro.tsx'
 import AdminLayout from './admin/AdminLayout.tsx'
+import AdminCadAdmin from './admin/AdminCadAdmin.tsx'
+import AdminAlterUsuario from './admin/AdminUsuario.tsx'
+
 
 const rotas = createBrowserRouter([
   {
@@ -24,19 +27,18 @@ const rotas = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { index: true, element: <AdminDashboard /> },
-    ]
-  },
-  {
-    path: "/admin/cadastro",
-    element: <CadastroAdmin/>
+      { path: "adminCadAdmin", element: <AdminCadAdmin/> },
+      { path: "admins", element: <AdminCadAdmin/> },
+      { path: "AdminUsuario", element: <AdminAlterUsuario/>}
+    ],
   },
   {
     path: '/',
     element: <Layout />,
     children: [
-      { index: true, element: <Navigate to="/boards" replace /> }, 
+      { index: true, element: <Navigate to="/login" replace /> }, 
       { path: 'login', element: <Login /> },                       
-      { path: 'cadastro', element: <Cadastro /> }, 
+      { path: 'cadastro', element: <CadastroUsuario /> }, 
       { path: 'boards', element: <App /> },                        
       { path: 'boards/:boardId/listas/tasks/comentarios', element: <CardLista /> },
       { path: '*', element: <Navigate to="/boards" replace /> },
@@ -46,6 +48,7 @@ const rotas = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Toaster position="top-center" richColors />
     <RouterProvider router={rotas} />
   </StrictMode>,
 )

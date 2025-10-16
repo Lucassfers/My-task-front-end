@@ -1,15 +1,16 @@
-import { MdOutlineInsertComment } from "react-icons/md";
-import { FaRegCalendarCheck } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import type { BoardType } from "../utils/BoardType";
 import type { ListaType } from "../utils/ListaType";
-import { Modal } from "./Modal";
+import type { TaskType } from "../utils/TaskType";
 import type { ComentarioType } from "../utils/ComentarioType";
 import { useUsuarioStore } from "../context/UsuarioContext";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import ItemTask from "./ItemTask";
+import NewLista from "./NewLista";
+import NewTask from "./NewTask";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 type Inputs = { conteudo: string };
@@ -18,22 +19,44 @@ export default function CardLista() {
     const { boardId } = useParams<{ boardId: string }>();
     const [board, setBoard] = useState<BoardType | null>(null);
     const [listas, setListas] = useState<ListaType[]>([]);
+    const [tasks, setTasks] = useState<TaskType[]>([]);
     const { usuario } = useUsuarioStore();
     const [comentarios, setComentarios] = useState<ComentarioType[]>([]);
     const [loading, setLoading] = useState(true);
     const { register, handleSubmit, reset } = useForm<Inputs>();
     const [openTaskId, setOpenTaskId] = useState<number | null>(null);
     const listaComentariosRef = useRef<HTMLDivElement | null>(null);
+    const [editandoListaId, setEditandoListaId] = useState<number | null>(null);
+    const [novoTituloLista, setNovoTituloLista] = useState("");
 
     useEffect(() => {
         if (!boardId) return;
         (async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${apiUrl}/boards/${boardId}/listas/tasks/comentarios`);
-                const dados = await response.json();
-                setBoard(dados);
-                setListas(dados.listas ?? []);
+                const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+                const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+                const token = usuarioData?.token ?? "";
+                
+                const response = await fetch(`${apiUrl}/boards/${boardId}/listas/tasks/comentarios`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                const dados2 = await response.json();
+                setBoard(dados2);
+                
+                // Ordena as tasks para que as destacadas fiquem no topo
+                const listasOrdenadas = (dados2.listas ?? []).map((lista: ListaType) => ({
+                    ...lista,
+                    tasks: lista.tasks?.sort((a, b) => {
+                        if (a.destaque && !b.destaque) return -1;
+                        if (!a.destaque && b.destaque) return 1;
+                        return 0;
+                    })
+                }));
+                
+                setListas(listasOrdenadas);
             } catch (e) {
                 console.error(e);
             } finally {
@@ -84,9 +107,16 @@ export default function CardLista() {
 
     async function enviarComentario(data: Inputs) {
         if (!openTaskId) return;
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+        const token = usuarioData?.token ?? "";
+        
         const response = await fetch(`${apiUrl}/comentarios`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify({
                 conteudo: data.conteudo,
                 usuarioId: usuario.id,
@@ -107,137 +137,246 @@ export default function CardLista() {
         }
     }
 
-    
+    async function criarNovaLista() {
+        if (!boardId || !usuario.id) {
+            toast.error("Erro: dados do board ou usuário não encontrados");
+            return;
+        }
+
+        const numeroLista = listas.length + 1;
+        const tituloLista = `Lista ${numeroLista}`;
+
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+        const token = usuarioData?.token ?? "";
+
+        try {
+            const response = await fetch(`${apiUrl}/listas`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    titulo: tituloLista,
+                    boardId: Number(boardId),
+                    usuarioId: usuario.id
+                })
+            });
+
+            if (response.status === 201) {
+                const novaLista = await response.json();
+                setListas([...listas, { ...novaLista, tasks: [] }]);
+                toast.success(`${tituloLista} criada com sucesso!`);
+            } else {
+                const erro = await response.json();
+                toast.error(`Erro ao criar lista: ${erro.erro || 'Erro desconhecido'}`);
+            }
+        } catch (error) {
+            console.error("Erro ao criar lista:", error);
+            toast.error("Erro ao criar lista");
+        }
+    }
+
+    function iniciarEdicaoLista(listaId: number, tituloAtual: string) {
+        setEditandoListaId(listaId);
+        setNovoTituloLista(tituloAtual);
+    }
+
+    async function salvarEdicaoLista(listaId: number) {
+        if (!novoTituloLista.trim()) {
+            toast.warning("O título da lista não pode estar vazio");
+            return;
+        }
+
+        if (!boardId || !usuario.id) {
+            toast.error("Erro: dados do board ou usuário não encontrados");
+            return;
+        }
+
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+        const token = usuarioData?.token ?? "";
+
+        try {
+            const response = await fetch(`${apiUrl}/listas/${listaId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    titulo: novoTituloLista,
+                    boardId: Number(boardId),
+                    usuarioId: usuario.id
+                })
+            });
+
+            if (response.status === 200) {
+                setListas(listas.map(l => 
+                    l.id === listaId ? { ...l, titulo: novoTituloLista } : l
+                ));
+                toast.success("Título da lista atualizado!");
+                setEditandoListaId(null);
+                setNovoTituloLista("");
+            } else {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    const erro = await response.json();
+                    toast.error(erro.erro || "Erro ao atualizar lista");
+                } else {
+                    toast.error("Erro: Resposta inválida do servidor");
+                }
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar lista:", error);
+            toast.error("Erro ao atualizar lista");
+        }
+    }
+
+    function cancelarEdicaoLista() {
+        setEditandoListaId(null);
+        setNovoTituloLista("");
+    }
+
+    async function criarNovaTask(listaId: number, titulo: string) {
+        if (!usuario.id) {
+            toast.error("Erro: dados do usuário não encontrados");
+            return;
+        }
+
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+        const token = usuarioData?.token ?? "";
+
+        // Prazo padrão: hoje + 7 dias
+        const prazo = new Date();
+        prazo.setDate(prazo.getDate() + 7);
+
+        try {
+            const response = await fetch(`${apiUrl}/tasks`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    titulo,
+                    descricao: "",
+                    prazo: prazo.toISOString(),
+                    usuarioId: usuario.id,
+                    listaId: listaId,
+                    destaque: false,
+                    concluida: false
+                })
+            });
+
+            if (response.status === 201) {
+                const novaTask = await response.json();
+                const taskCompleta = {
+                    ...novaTask,
+                    comentarios: [],
+                    concluida: false
+                };
+                
+                setListas(listas.map(l => 
+                    l.id === listaId 
+                        ? { ...l, tasks: [...(l.tasks || []), taskCompleta] }
+                        : l
+                ));
+                toast.success("Task criada com sucesso!");
+            } else {
+                const erro = await response.json();
+                toast.error(`Erro ao criar task: ${erro.erro || 'Erro desconhecido'}`);
+            }
+        } catch (error) {
+            console.error("Erro ao criar task:", error);
+            toast.error("Erro ao criar task");
+        }
+    }
 
     return (
-        <div className="pl-34 pt-6 w-[80vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem]">
+        <div className=" pt-6 w-[75vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem]">
             <h1 className="text-2xl font-bold mb-6 text-[#3B82F6] border-[#3B82F6] border-b-2">
                 {board.titulo}
             </h1>
             {listas.length ? (
-                <div className="flex gap-4">
+                <div className="flex gap-4 overflow-x-auto">
                     {listas.map((lista) => (
                         <div
                             key={lista.id}
                             className="text-[#3B82F6] bg-[#FFFFFF] p-4 rounded-[8px] shadow-xl w-[15rem] hover:shadow-2xl
-                            flex flex-col h-[50vh] min-h-0">
-                            <div className="flex justify-between">
-                                <h2 className="text-lg font-bold mb-3">{lista.titulo}</h2>
-                                <button>
-                                    <FaPencil className="cursor-pointer hover:text-blue-300" />
-                                </button>
+                            flex flex-col h-[50vh] min-h-0 flex-shrink-0">
+                            <div className="flex justify-between items-center mb-3">
+                                {editandoListaId === lista.id ? (
+                                    <input
+                                        type="text"
+                                        value={novoTituloLista}
+                                        onChange={(e) => setNovoTituloLista(e.target.value)}
+                                        className="flex-1 border-none border-blue-500 bg-transparent px-2 py-1 text-lg font-bold focus:outline-none focus:border-blue-700"
+                                        autoFocus
+                                        onBlur={() => salvarEdicaoLista(lista.id)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') salvarEdicaoLista(lista.id);
+                                            if (e.key === 'Escape') cancelarEdicaoLista();
+                                        }}
+                                    />
+                                ) : (
+                                    <>
+                                        <h2 className="text-lg font-bold">{lista.titulo}</h2>
+                                        <button onClick={() => iniciarEdicaoLista(lista.id, lista.titulo)}>
+                                            <FaPencil className="cursor-pointer hover:text-blue-300" />
+                                        </button>
+                                    </>
+                                )}
                             </div>
-                            {lista.tasks?.length ? (
-                                <ul className="mt-2 flex-1 overflow-y-auto overflow-x-hidden pr-1 space-y-2">
-                                    {lista.tasks.map((t) => (
-                                        <li
-                                            key={t.id}
-                                            className="text-[#3B82F6] rounded-[8px] border p-2 hover:bg-blue-300 hover:text-white ">
-                                            <div className="flex items-center">
-                                                <input type="checkbox" className="cursor-pointer ml-[0.4rem]" />
-                                                <button
-                                                    onClick={() => setOpenTaskId(t.id)}
-                                                    className="font-medium ml-[1rem] w-[8.5rem] cursor-pointer text-start transition-all "
-                                                >
-                                                    {t.titulo}
-                                                </button>
-                                            </div>
-                                            <Modal isOpen={openTaskId === t.id} onClose={() => setOpenTaskId(null)}>
-                                                <div className="max-w-[90vw] h-[27rem] mr-[2rem]">
-                                                    <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[1rem] text-[#3B82F6]">
-                                                        {lista.titulo}
-                                                    </h1>
-                                                    <div className="flex items-center justify-between py-3 ">
-                                                        <h1 className="text-l font-bold pl-[1rem] text-[#3B82F6]">{t.titulo}</h1>
-                                                    </div>
-                                                    <div className="flex gap-6 pl-[1rem]">
-                                                        <div className="bg-gray-100 rounded-2xl p-5 w-[27rem] h-[20rem] shadow-md shadow-blue-400">
-                                                            <div className="flex items-center gap-2 mb-2">
-                                                                <FaRegCalendarCheck className="text-[#3B82F6]" />
-                                                                <h3 className="font-bold  text-[#3B82F6]">Descrição</h3>
-                                                                <div className="ml-[14rem] text-[#3B82F6] cursor-pointer">
-                                                                    <button className="rounded-md border px-3 py-1.5 text-sm bg-[#3B82F6] text-white font-bold hover:shadow-2xl ">
-                                                                        Editar
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            <p className="text-sm leading-relaxed whitespace-pre-wrap break-words text-[#3B82F6] bg-white py-2 px-3 rounded-md min-h-[4rem] font-medium  ">
-                                                                {t?.descricao?.trim() ? t.descricao : "Sem descrição"}
-                                                            </p>
-                                                            {t.prazo && (
-                                                                <div className="mt-4 flex items-center gap-2 text-sm text-[#3B82F6]">
-                                                                    <span className="font-bold ">Prazo para:</span>
-                                                                    <span className="opacity-90">
-                                                                        {new Date(t.prazo).toLocaleDateString("pt-BR", {
-                                                                            day: "2-digit",
-                                                                            month: "short",
-                                                                            year: "numeric",
-                                                                        })}
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <form
-                                                            onSubmit={handleSubmit(enviarComentario)}
-                                                            className="bg-gray-100 rounded-2xl p-5 w-[28rem] h-[20rem] ml-[1rem] shadow-md shadow-blue-400 text-[#3B82F6] flex flex-col min-h-0 overflow-hidden">
-                                                            <div className="flex items-center gap-3 mb-3">
-                                                                <MdOutlineInsertComment className="mt-1" />
-                                                                <h2 className="font-semibold">Comentários e atividade</h2>
-                                                            </div>
-
-                                                            <div className="flex items-start gap-3 mb-4">
-                                                                <div className="flex-1">
-                                                                    <input
-                                                                        {...register("conteudo", { required: true })}
-                                                                        type="text"
-                                                                        placeholder="Escreva um comentário…"
-                                                                        className="w-full rounded-md border px-3 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-600"
-                                                                    />
-                                                                </div>
-                                                                <button
-                                                                    type="submit"
-                                                                    className="rounded-md  px-3 py-1.5 text-sm bg-[#3B82F6] text-white font-bold cursor-pointer"
-                                                                >
-                                                                    Enviar
-                                                                </button>
-                                                            </div>
-                                                            <div ref={listaComentariosRef}
-                                                                className="flex-1 overflow-y-auto pr-2 space-y-2">
-                                                                {(comentarios ?? []).length > 0 ? (
-                                                                    comentarios.map((c) => (
-                                                                        <div key={c.id} className="py-1">
-                                                                            <p
-                                                                                className="w-full max-w-full bg-white rounded-sm px-4 py-2 text-sm text-gray-600 
-                                                 whitespace-pre-wrap break-words drop-shadow-md"
-                                                                            >
-                                                                                <span className="font-semibold text-blue-600">
-                                                                                    {c.usuario?.nome || "Usuário desconhecido"}:
-                                                                                </span>{" "}
-                                                                                {c.conteudo}
-                                                                            </p>
-                                                                        </div>
-                                                                    ))
-                                                                ) : (
-                                                                    <p className="text-gray-400">Sem comentários</p>
-                                                                )}
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </Modal>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p className="text-gray-500">Sem tasks</p>
-                            )}
+                            <ul className="mt-2 flex-1 overflow-y-auto overflow-x-hidden pr-1 space-y-2">
+                                {lista.tasks?.length ? (
+                                    <>
+                                        {lista.tasks.map((task) => (
+                                            <ItemTask 
+                                                key={task.id}
+                                                task={{
+                                                    ...task,
+                                                    listaId: lista.id,
+                                                } as TaskType}
+                                                tasks={lista.tasks?.map(t => ({
+                                                    ...t,
+                                                    listaId: lista.id,
+                                                } as TaskType)) || []}
+                                                setTasks={(novasTasks) => {
+                                                    if (typeof novasTasks === 'function') return;
+                                                    const tasksAtualizadas = novasTasks.map(t => ({
+                                                        usuarioId: t.usuarioId,
+                                                        id: t.id,
+                                                        titulo: t.titulo,
+                                                        descricao: t.descricao,
+                                                        prazo: t.prazo,
+                                                        comentarios: t.comentarios,
+                                                        destaque: t.destaque,
+                                                        concluida: t.concluida,
+                                                    }));
+                                                    setListas(listas.map(l => 
+                                                        l.id === lista.id 
+                                                            ? { ...l, tasks: tasksAtualizadas }
+                                                            : l
+                                                    ));
+                                                }}
+                                                lista={lista}
+                                            />
+                                        ))}
+                                    </>
+                                ) : null}
+                                <NewTask onCreateTask={(titulo) => criarNovaTask(lista.id, titulo)} />
+                            </ul>
                         </div>
                     ))}
+                    <NewLista onClick={criarNovaLista} />
                 </div>
             ) : (
-                <>
-                    <h1>Sem listas adicionadas</h1>
-                </>
+                <div className="flex gap-4">
+                    <NewLista onClick={criarNovaLista} />
+                </div>
             )}
         </div>
     );

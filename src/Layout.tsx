@@ -4,7 +4,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import { useUsuarioStore } from "./context/UsuarioContext";
 import App from "./App";
-import { MenuLateral } from "./components/MenuLateral";
+// import { MenuLateral } from "./components/MenuLateral";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -14,19 +14,26 @@ export default function Layout() {
   const location = useLocation();
 
   useEffect(() => {
-    async function buscaUsuario(id: string) {
-      const response = await fetch(`${apiUrl}/usuarios/${id}`);
+    async function buscaUsuario(dadosUsuario: any) {
+      const response = await fetch(`${apiUrl}/usuarios/${dadosUsuario.id}`);
       if (!response.ok) {
         deslogaUsuario();
         return;
       }
       const dados = await response.json();
-      logaUsuario(dados);
+      const usuarioToken = { ...dados, token: dadosUsuario.token };
+      logaUsuario(usuarioToken);
     }
 
-    if (localStorage.getItem("usuarioKey")) {
-      const idUsuario = localStorage.getItem("usuarioKey") as string;
-      buscaUsuario(idUsuario); 
+    const usuarioString = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+    if (usuarioString) {
+      try {
+        const dadosUsuario = JSON.parse(usuarioString);
+        buscaUsuario(dadosUsuario); 
+      } catch (error) {
+        console.error("Erro ao parsear dados do usuário:", error);
+        deslogaUsuario();
+      }
     } else {
       deslogaUsuario();
     }
@@ -47,8 +54,16 @@ export default function Layout() {
     return (
       <div className="bg-[#F5F7FA] min-h-screen">
         <Header onPesquisa={handlePesquisa} />
-        <MenuLateral/>
+        {/* <MenuLateral/> */}
         <App termoPesquisa={termoPesquisa} />
+      </div>
+    );
+  }
+
+  if (location.pathname === '/login' || location.pathname === '/cadastro') {
+    return (
+      <div className="bg-[#F5F7FA] min-h-screen">
+        <Outlet />
       </div>
     );
   }
@@ -56,7 +71,7 @@ export default function Layout() {
   return (
     <div className="bg-[#F5F7FA] min-h-screen">
       <Header />
-      <MenuLateral/>
+      {/* <MenuLateral/> */}
       <Outlet />
     </div>
   );

@@ -14,16 +14,31 @@ export default function App({ termoPesquisa }: AppProps) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function buscaBoards() {
-      const response = await fetch(`${apiUrl}/boards`)
-      const dados = await response.json()
-      setBoards(dados)
-      setLoading(false)
+    async function buscaBoardsPessoais() {
+      try{
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey")
+        const usuario = dados ? JSON.parse(dados) as { token?: string } : null
+        const token = usuario?.token ?? ""
+
+        const response = await fetch(`${apiUrl}/boards`, {
+          headers: token ? { Authorization: `Bearer ${token}`} : {},
+        })
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+          const dados2 = await response.json()
+
+          setBoards(Array.isArray(dados2) ? dados2 : [])
+      } catch (error) {
+        console.error("Erro ao buscar boards:", error)
+        setBoards([])
+      } finally {
+        setLoading(false)
+      }
     }
-    buscaBoards()
+    buscaBoardsPessoais()
   }, [])
 
-  // Filtra boards baseado no termo de pesquisa
   const boardsFiltrados = termoPesquisa && termoPesquisa.trim().length > 0
     ? boards.filter(board => 
         board.titulo.toLowerCase().includes(termoPesquisa.toLowerCase()) ||

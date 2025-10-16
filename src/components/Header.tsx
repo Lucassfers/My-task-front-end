@@ -11,17 +11,25 @@ type HeaderProps = {
 export default function Header({ onPesquisa }: HeaderProps) {
   const { usuario, deslogaUsuario } = useUsuarioStore()
   const navigate = useNavigate()
+  const armazenado = (() => {
+  try { 
+    const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey")
+    return JSON.parse(dados || "null") 
+  } catch { return null }
+})()
+  const usuarioAtual = usuario ?? armazenado
+  const logado = !!usuarioAtual?.id
+  const nome = usuarioAtual?.nome ?? ""
 
   function primeiroNome(nomeCompleto: string) {
-    return nomeCompleto.split(" ")[0];
+    return nomeCompleto.split(" ")[0] ?? "";
   }
 
   function usuarioSair() {
     if (confirm("Confirma saída do sistema?")) {
       deslogaUsuario()
-      if (localStorage.getItem("usuarioKey")) {
-        localStorage.removeItem("usuarioKey")
-      }
+      localStorage.removeItem("usuarioKey")
+      sessionStorage.removeItem("usuarioKey")
       navigate("/login")
     }
   }
@@ -37,18 +45,15 @@ export default function Header({ onPesquisa }: HeaderProps) {
 
         <div className="flex flex-1 justify-center">
           <div className="flex items-center gap-4">
-            <button
-              type="button"
-              className="text-white bg-[#2563EB] font-medium text-[1rem] cursor-pointer px-4 py-2 rounded-lg 
-            transition-colors duration-500 hover:shadow-md hover:bg-[#155fd6] flex items-center gap-2"
+            {/* <button
+              <Link
+              to="/boards"
+              className="text-black font-medium text-[1rem] cursor-pointer px-4 py-2 rounded-lg
+            transition-colors duration-500 hover:text-shadow-md"
             >
-              Criar
-            </button>
-
-            <div className="relative">
-              <IoSearchSharp className="ml-2 pointer-events-none absolute top-1/2 -translate-y-1/2 left-2 h-4 text-black" />
-              <InputPesquisa  onPesquisa={onPesquisa || (() => {})} />
-            </div> 
+              Boards
+            </Link>
+            </button> */}
 
             <Link
               to="/boards"
@@ -57,15 +62,20 @@ export default function Header({ onPesquisa }: HeaderProps) {
             >
               Boards
             </Link>
+            <div className="relative">
+              <IoSearchSharp className="ml-2 pointer-events-none absolute top-1/2 -translate-y-1/2 left-2 h-4 text-black" />
+              <InputPesquisa  onPesquisa={onPesquisa || (() => {})} />
+            </div> 
+
           </div>
         </div>
 
         <div className="flex items-center">
-          {usuario.id ? (
+          {logado ? (
             <>
               <span className="text-black font-medium text-[1rem] cursor-pointer px-4 py-2 rounded-lg
             transition-colors duration-500 ">
-                Olá, {primeiroNome(usuario.nome)}!
+                Olá, {primeiroNome(nome)}!
               </span>
               <button
                 onClick={usuarioSair}
