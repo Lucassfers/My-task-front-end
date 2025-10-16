@@ -24,7 +24,6 @@ const apiUrl = import.meta.env.VITE_API_URL
 
 export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProps) {
     const { usuario } = useUsuarioStore()
-    const [loading, setLoading] = useState(true);
     const [comentarios, setComentarios] = useState<ComentarioType[]>([])
     const [isOpen, setIsOpen] = useState(false);
     const { register, handleSubmit, reset }= useForm<Inputs>();
@@ -35,7 +34,6 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
         if (task.comentarios) {
             setComentarios(task.comentarios);
         }
-        setLoading(false);
     }, [task.id, task.comentarios]);
 
     async function enviarComentario(data: Inputs) {
@@ -149,8 +147,6 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
             toast.error("Erro ao atualizar task");
         }
     }
-    
-
     return (
         <>
             <li

@@ -3,17 +3,6 @@ import type { BoardType } from "../utils/BoardType";
 
 
 export function CardBoard({ data }: { data: BoardType }) {
-
-  let motivoColor = "#3B82F6";
-  if (data.motivo && data.motivo.toUpperCase() === "TRABALHO") {
-    motivoColor = "bg-color-[#FACC16]";
-  } else if (data.motivo && data.motivo.toUpperCase() === "ESTUDO") {
-    motivoColor = "bg-color-[#3faafb]";
-  } else if (data.motivo && data.motivo.toUpperCase() === "PESSOAL") {
-    motivoColor = "bg-color-[#D2B48C]";
-  } else if (data.motivo && data.motivo.toUpperCase() === "OUTRO") {
-    motivoColor = "bg-color-[#808080]";
-  }
   if (!data) return null;
   return (
 

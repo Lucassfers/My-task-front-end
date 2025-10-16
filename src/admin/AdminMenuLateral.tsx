@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 
 export function MenuLateralAdmin() {
   const navigate = useNavigate()
-  const { admin, deslogaAdmin } = useAdminStore()
+  const { deslogaAdmin } = useAdminStore()
 
   function adminSair() {
     if (confirm("Confirma Saída?")) {
