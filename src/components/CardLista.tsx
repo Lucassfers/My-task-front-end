@@ -64,20 +64,18 @@ export default function CardLista() {
             setComentarios([]);
             return;
         }
-        (async () => {
-            try {
-                let taskAberta = null;
-                for (const lista of listas) {
-                    taskAberta = lista.tasks?.find((t) => t.id === openTaskId);
-                    if (taskAberta) break;
-                }
-                if (taskAberta && taskAberta.comentarios) setComentarios(taskAberta.comentarios);
-                else setComentarios([]);
-            } catch (err) {
-                console.error("Erro ao carregar comentários:", err);
-                setComentarios([]);
+        try {
+            let taskAberta = null as any;
+            for (const lista of listas) {
+                taskAberta = lista.tasks?.find((t) => t.id === openTaskId);
+                if (taskAberta) break;
             }
-        })();
+            if (taskAberta && taskAberta.comentarios) setComentarios(taskAberta.comentarios);
+            else setComentarios([]);
+        } catch (err) {
+            console.error("Erro ao carregar comentários:", err);
+            setComentarios([]);
+        }
     }, [openTaskId, listas]);
 
 
