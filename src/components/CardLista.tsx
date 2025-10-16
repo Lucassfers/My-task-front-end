@@ -266,7 +266,8 @@ export default function CardLista() {
                     prazo: prazo.toISOString(),
                     usuarioId: usuario.id,
                     listaId: listaId,
-                    destaque: false
+                    destaque: false,
+                    concluida: false
                 })
             });
 
@@ -274,7 +275,8 @@ export default function CardLista() {
                 const novaTask = await response.json();
                 const taskCompleta = {
                     ...novaTask,
-                    comentarios: []
+                    comentarios: [],
+                    concluida: false
                 };
                 
                 setListas(listas.map(l => 
@@ -352,6 +354,7 @@ export default function CardLista() {
                                                         prazo: t.prazo,
                                                         comentarios: t.comentarios,
                                                         destaque: t.destaque,
+                                                        concluida: t.concluida,
                                                     }));
                                                     setListas(listas.map(l => 
                                                         l.id === lista.id 
