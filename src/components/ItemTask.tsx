@@ -61,7 +61,11 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
 
             if (response.status === 201) {
                 const novoComentario = await response.json();
-                setComentarios([...comentarios, novoComentario]);
+                const comentarioComUsuario = {
+                    ...novoComentario,
+                    usuario: { id: usuario.id, nome: usuario.nome }
+                };
+                setComentarios([...comentarios, comentarioComUsuario]);
                 reset();
                 toast.success("Comentário enviado!");
                 if (listaComentariosRef.current) {

@@ -9,6 +9,7 @@ import { useUsuarioStore } from "../context/UsuarioContext";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import ItemTask from "./ItemTask";
+import NewLista from "./NewLista";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 type Inputs = { conteudo: string };
@@ -24,6 +25,8 @@ export default function CardLista() {
     const { register, handleSubmit, reset } = useForm<Inputs>();
     const [openTaskId, setOpenTaskId] = useState<number | null>(null);
     const listaComentariosRef = useRef<HTMLDivElement | null>(null);
+    const [editandoListaId, setEditandoListaId] = useState<number | null>(null);
+    const [novoTituloLista, setNovoTituloLista] = useState("");
 
     useEffect(() => {
         if (!boardId) return;
@@ -133,7 +136,107 @@ export default function CardLista() {
         }
     }
 
-    
+    async function criarNovaLista() {
+        if (!boardId || !usuario.id) {
+            toast.error("Erro: dados do board ou usuário não encontrados");
+            return;
+        }
+
+        const numeroLista = listas.length + 1;
+        const tituloLista = `Lista ${numeroLista}`;
+
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+        const token = usuarioData?.token ?? "";
+
+        try {
+            const response = await fetch(`${apiUrl}/listas`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    titulo: tituloLista,
+                    boardId: Number(boardId),
+                    usuarioId: usuario.id
+                })
+            });
+
+            if (response.status === 201) {
+                const novaLista = await response.json();
+                setListas([...listas, { ...novaLista, tasks: [] }]);
+                toast.success(`${tituloLista} criada com sucesso!`);
+            } else {
+                const erro = await response.json();
+                toast.error(`Erro ao criar lista: ${erro.erro || 'Erro desconhecido'}`);
+            }
+        } catch (error) {
+            console.error("Erro ao criar lista:", error);
+            toast.error("Erro ao criar lista");
+        }
+    }
+
+    function iniciarEdicaoLista(listaId: number, tituloAtual: string) {
+        setEditandoListaId(listaId);
+        setNovoTituloLista(tituloAtual);
+    }
+
+    async function salvarEdicaoLista(listaId: number) {
+        if (!novoTituloLista.trim()) {
+            toast.warning("O título da lista não pode estar vazio");
+            return;
+        }
+
+        if (!boardId || !usuario.id) {
+            toast.error("Erro: dados do board ou usuário não encontrados");
+            return;
+        }
+
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+        const token = usuarioData?.token ?? "";
+
+        try {
+            const response = await fetch(`${apiUrl}/listas/${listaId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    titulo: novoTituloLista,
+                    boardId: Number(boardId),
+                    usuarioId: usuario.id
+                })
+            });
+
+            if (response.status === 200) {
+                setListas(listas.map(l => 
+                    l.id === listaId ? { ...l, titulo: novoTituloLista } : l
+                ));
+                toast.success("Título da lista atualizado!");
+                setEditandoListaId(null);
+                setNovoTituloLista("");
+            } else {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    const erro = await response.json();
+                    toast.error(erro.erro || "Erro ao atualizar lista");
+                } else {
+                    toast.error("Erro: Resposta inválida do servidor");
+                }
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar lista:", error);
+            toast.error("Erro ao atualizar lista");
+        }
+    }
+
+    function cancelarEdicaoLista() {
+        setEditandoListaId(null);
+        setNovoTituloLista("");
+    }
 
     return (
         <div className=" pt-6 w-[75vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem]">
@@ -141,17 +244,34 @@ export default function CardLista() {
                 {board.titulo}
             </h1>
             {listas.length ? (
-                <div className="flex gap-4">
+                <div className="flex gap-4 overflow-x-auto">
                     {listas.map((lista) => (
                         <div
                             key={lista.id}
                             className="text-[#3B82F6] bg-[#FFFFFF] p-4 rounded-[8px] shadow-xl w-[15rem] hover:shadow-2xl
-                            flex flex-col h-[50vh] min-h-0">
-                            <div className="flex justify-between">
-                                <h2 className="text-lg font-bold mb-3">{lista.titulo}</h2>
-                                <button>
-                                    <FaPencil className="cursor-pointer hover:text-blue-300" />
-                                </button>
+                            flex flex-col h-[50vh] min-h-0 flex-shrink-0">
+                            <div className="flex justify-between items-center mb-3">
+                                {editandoListaId === lista.id ? (
+                                    <input
+                                        type="text"
+                                        value={novoTituloLista}
+                                        onChange={(e) => setNovoTituloLista(e.target.value)}
+                                        className="flex-1 border-none border-blue-500 bg-transparent px-2 py-1 text-lg font-bold focus:outline-none focus:border-blue-700"
+                                        autoFocus
+                                        onBlur={() => salvarEdicaoLista(lista.id)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') salvarEdicaoLista(lista.id);
+                                            if (e.key === 'Escape') cancelarEdicaoLista();
+                                        }}
+                                    />
+                                ) : (
+                                    <>
+                                        <h2 className="text-lg font-bold">{lista.titulo}</h2>
+                                        <button onClick={() => iniciarEdicaoLista(lista.id, lista.titulo)}>
+                                            <FaPencil className="cursor-pointer hover:text-blue-300" />
+                                        </button>
+                                    </>
+                                )}
                             </div>
                             {lista.tasks?.length ? (
                                 <ul className="mt-2 flex-1 overflow-y-auto overflow-x-hidden pr-1 space-y-2">
@@ -192,11 +312,12 @@ export default function CardLista() {
                             )}
                         </div>
                     ))}
+                    <NewLista onClick={criarNovaLista} />
                 </div>
             ) : (
-                <>
-                    <h1>Sem listas adicionadas</h1>
-                </>
+                <div className="flex gap-4">
+                    <NewLista onClick={criarNovaLista} />
+                </div>
             )}
         </div>
     );

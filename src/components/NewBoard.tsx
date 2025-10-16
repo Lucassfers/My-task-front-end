@@ -59,10 +59,8 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
       const data = await response.json();
       console.log("Board criado com sucesso:", data);
       
-      // Fechar o modal e limpar os campos
       handleCloseModal();
       
-      // Recarregar a página ou atualizar a lista de boards
       window.location.reload();
       
     } catch (error) {

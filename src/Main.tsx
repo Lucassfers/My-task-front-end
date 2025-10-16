@@ -28,6 +28,7 @@ const rotas = createBrowserRouter([
     children: [
       { index: true, element: <AdminDashboard /> },
       { path: "adminCadAdmin", element: <AdminCadAdmin/> },
+      { path: "admins", element: <AdminCadAdmin/> },
       { path: "AdminUsuario", element: <AdminAlterUsuario/>}
     ],
   },
