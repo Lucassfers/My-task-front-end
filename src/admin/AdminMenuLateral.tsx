@@ -1,5 +1,4 @@
 import { IoExitOutline } from "react-icons/io5"
-import { FaRegUser } from "react-icons/fa"
 import { useAdminStore } from "./context/AdminContext"
 import { Link, useNavigate } from "react-router-dom"
 

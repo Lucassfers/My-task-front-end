@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ItemUsuario from "./components/ItemUsuario";
-import { Link } from "react-router-dom";
 import type { UsuarioType } from "../utils/UsuarioType";
 
 const apiUrl = import.meta.env.VITE_API_URL
@@ -27,10 +26,6 @@ export default function AdminAlterUsuario(){
         <h1 className="mb-4 text-2xl font-bold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl dark:text-white">
           Gerenciamento de usuários do Sistema
         </h1>
-        <Link to="/admin" 
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-md px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-          Novo Usuario
-        </Link>
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

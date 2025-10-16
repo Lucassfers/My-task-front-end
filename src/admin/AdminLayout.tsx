@@ -8,8 +8,6 @@ import AdminHeader from './AdminHeader.tsx'
 
 export default function AdminLayout() {
   const { admin } = useAdminStore()
-
-//  console.log(admin)
   const navigate = useNavigate()
 
   useEffect(() => {

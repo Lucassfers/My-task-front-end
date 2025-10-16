@@ -26,7 +26,6 @@ export default function Login() {
 
     if (response.status == 200) {
       const dados = await response.json()
-      // Garante que o token venha no objeto salvo e no estado
       logaUsuario(dados)
       const payload = JSON.stringify(dados)
       if (data.manter) {

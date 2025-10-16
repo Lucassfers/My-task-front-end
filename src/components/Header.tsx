@@ -45,16 +45,6 @@ export default function Header({ onPesquisa }: HeaderProps) {
 
         <div className="flex flex-1 justify-center">
           <div className="flex items-center gap-4">
-            {/* <button
-              <Link
-              to="/boards"
-              className="text-black font-medium text-[1rem] cursor-pointer px-4 py-2 rounded-lg
-            transition-colors duration-500 hover:text-shadow-md"
-            >
-              Boards
-            </Link>
-            </button> */}
-
             <Link
               to="/boards"
               className="text-black font-medium text-[1rem] cursor-pointer px-4 py-2 rounded-lg

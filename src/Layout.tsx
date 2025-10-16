@@ -4,7 +4,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import { useUsuarioStore } from "./context/UsuarioContext";
 import App from "./App";
-// import { MenuLateral } from "./components/MenuLateral";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -54,7 +53,6 @@ export default function Layout() {
     return (
       <div className="bg-[#F5F7FA] min-h-screen">
         <Header onPesquisa={handlePesquisa} />
-        {/* <MenuLateral/> */}
         <App termoPesquisa={termoPesquisa} />
       </div>
     );
@@ -71,7 +69,6 @@ export default function Layout() {
   return (
     <div className="bg-[#F5F7FA] min-h-screen">
       <Header />
-      {/* <MenuLateral/> */}
       <Outlet />
     </div>
   );

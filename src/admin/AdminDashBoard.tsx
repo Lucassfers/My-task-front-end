@@ -1,7 +1,6 @@
 import './AdminDashboard.css'
 import { useEffect, useState } from "react";
 import { VictoryPie, VictoryLabel, VictoryTheme } from "victory";
-
 const apiUrl = import.meta.env.VITE_API_URL
 
 type graficoBoardsUsuarioType = {
@@ -84,27 +83,27 @@ export default function AdminDashboard() {
 
       <div className="w-2/3 flex justify-between mx-auto mb-5">
         <div className="border-blue-600 border rounded p-6 w-1/3 me-3">
-          <span className="bg-blue-100 text-blue-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-blue-900 dark:text-blue-300">
+          <span className="bg-blue-500 text-black text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded">
             {dados.totalUsuarios}</span>
           <p className="font-bold mt-2 text-center">Nº Usuarios </p>
         </div>
-        <div className="border-blue-600 border rounded p-6 w-1/3 me-3">
-          <span className="bg-blue-100 text-blue-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-blue-900 dark:text-blue-300">
+        <div className="border-amber-500 border rounded p-6 w-1/3 me-3">
+          <span className="bg-amber-500 text-black text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded">
             {dados.totalBoards}</span>
           <p className="font-bold mt-2 text-center">Nº Boards</p>
         </div>
-        <div className="border-red-600 border rounded p-6 w-1/3 me-3">
-          <span className="bg-red-100 text-red-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-red-900 dark:text-red-300">
+        <div className="border-amber-600 border rounded p-6 w-1/3 me-3">
+          <span className="bg-amber-500 text-black text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded">
             {dados.totalListas}</span>
           <p className="font-bold mt-2 text-center">Nº Listas</p>
         </div>
-        <div className="border-red-600 border rounded p-6 w-1/3 me-3">
-          <span className="bg-red-100 text-red-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-red-900 dark:text-red-300">
+        <div className="border-amber-600 border rounded p-6 w-1/3 me-3">
+          <span className="bg-amber-500 text-black text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded">
             {dados.totalTasks}</span>
           <p className="font-bold mt-2 text-center">Nº Tarefas</p>
         </div>
-        <div className="border-red-600 border rounded p-6 w-1/3 me-3">
-          <span className="bg-red-100 text-red-800 text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded dark:bg-red-900 dark:text-red-300">
+        <div className="border-amber-600 border rounded p-6 w-1/3 me-3">
+          <span className="bg-amber-500 text-black text-xl text-center font-bold mx-auto block px-2.5 py-5 rounded">
             {dados.totalComentarios}</span>
           <p className="font-bold mt-2 text-center">Nº Comentários</p>
         </div>
