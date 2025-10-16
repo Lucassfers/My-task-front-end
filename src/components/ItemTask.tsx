@@ -150,7 +150,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
         }
     }
     
-
+    if(loading) return <div>Carregando…</div>
     return (
         <>
             <li

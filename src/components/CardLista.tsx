@@ -7,13 +7,10 @@ import type { TaskType } from "../utils/TaskType";
 import type { ComentarioType } from "../utils/ComentarioType";
 import { useUsuarioStore } from "../context/UsuarioContext";
 import { toast } from "sonner";
-import { useForm } from "react-hook-form";
 import ItemTask from "./ItemTask";
 import NewLista from "./NewLista";
 import NewTask from "./NewTask";
-
 const apiUrl = import.meta.env.VITE_API_URL;
-type Inputs = { conteudo: string };
 
 export default function CardLista() {
     const { boardId } = useParams<{ boardId: string }>();
@@ -22,7 +19,6 @@ export default function CardLista() {
     const { usuario } = useUsuarioStore();
     const [comentarios, setComentarios] = useState<ComentarioType[]>([]);
     const [loading, setLoading] = useState(true);
-    const { reset } = useForm<Inputs>();
     const [openTaskId] = useState<number | null>(null);
     const listaComentariosRef = useRef<HTMLDivElement | null>(null);
     const [editandoListaId, setEditandoListaId] = useState<number | null>(null);
@@ -101,38 +97,6 @@ export default function CardLista() {
 
     if (loading) return <div>Carregando…</div>;
     if (!board) return <div>Board não encontrado</div>;
-
-    async function enviarComentario(data: Inputs) {
-        if (!openTaskId) return;
-        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
-        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
-        const token = usuarioData?.token ?? "";
-        
-        const response = await fetch(`${apiUrl}/comentarios`, {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                conteudo: data.conteudo,
-                usuarioId: usuario.id,
-                taskId: openTaskId,
-            }),
-        });
-        if (response.status === 201) {
-            toast.success("Comentário adicionado!");
-            const novoComentario = await response.json();
-            const comentarioComUsuario = {
-                ...novoComentario,
-                usuario: { id: usuario.id, nome: usuario.nome },
-            } as ComentarioType;
-            setComentarios((prev) => [...prev, comentarioComUsuario]);
-            reset();
-        } else {
-            toast.error("Erro ao adicionar comentário.");
-        }
-    }
 
     async function criarNovaLista() {
         if (!boardId || !usuario.id) {
