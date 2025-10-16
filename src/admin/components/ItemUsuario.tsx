@@ -1,7 +1,6 @@
 import { TiDeleteOutline } from "react-icons/ti"
 import { useAdminStore } from "../context/AdminContext"
 import type { UsuarioType } from "../../utils/UsuarioType";
-import { useUsuarioStore } from "../../context/UsuarioContext";
 
 type listaUsuariosProps = {
     usuarioLinha: UsuarioType;
@@ -12,7 +11,6 @@ type listaUsuariosProps = {
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function itemUsuario({ usuarioLinha, usuarios, setUsuario }: listaUsuariosProps) {
-    const { usuario } = useUsuarioStore()
     const { admin } = useAdminStore()
 
     async function excluirUsuario() {
@@ -21,8 +19,8 @@ export default function itemUsuario({ usuarioLinha, usuarios, setUsuario }: list
             return
         }
 
-        if (confirm(`Confirma a exclusão`)){
-            const response = await fetch(`${apiUrl}/admin/${usuarioLinha.id}`,
+        if (confirm(`Confirma a exclusão do usuário ${usuarioLinha.nome}?`)){
+            const response = await fetch(`${apiUrl}/usuarios/${usuarioLinha.id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -33,11 +31,14 @@ export default function itemUsuario({ usuarioLinha, usuarios, setUsuario }: list
             )
 
         if (response.status == 200) {
+            const dados = await response.json()
             const usuarios2 = usuarios.filter(x => x.id != usuarioLinha.id)
             setUsuario(usuarios2)
-            alert("Usuário excluido com sucesso.")
+            const counts = dados.afetados
+            alert(`Usuário excluído com sucesso!\n\nRegistros afetados:\n- Boards: ${counts.boards}\n- Listas: ${counts.listas}\n- Tasks: ${counts.tasksBoards + counts.tasksAtribuidas}\n- Comentários: ${counts.comentariosAnonimizados + counts.comentariosTasksAtribuidas + counts.comentariosTasksBoards}\n- Logs desvinculados: ${counts.logsDesvinculados}`)
         } else {
-            alert("Erro... Usuário não foi excluído.")
+            const erro = await response.json()
+            alert(`Erro... Usuário não foi excluído.\n\n${erro.erro || erro.detalhe || JSON.stringify(erro)}`)
         }
         }
     }
