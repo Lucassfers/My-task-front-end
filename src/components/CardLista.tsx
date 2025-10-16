@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import ItemTask from "./ItemTask";
 import NewLista from "./NewLista";
+import NewTask from "./NewTask";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 type Inputs = { conteudo: string };
@@ -238,6 +239,60 @@ export default function CardLista() {
         setNovoTituloLista("");
     }
 
+    async function criarNovaTask(listaId: number, titulo: string) {
+        if (!usuario.id) {
+            toast.error("Erro: dados do usuário não encontrados");
+            return;
+        }
+
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+        const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
+        const token = usuarioData?.token ?? "";
+
+        // Prazo padrão: hoje + 7 dias
+        const prazo = new Date();
+        prazo.setDate(prazo.getDate() + 7);
+
+        try {
+            const response = await fetch(`${apiUrl}/tasks`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    titulo,
+                    descricao: "",
+                    prazo: prazo.toISOString(),
+                    usuarioId: usuario.id,
+                    listaId: listaId,
+                    destaque: false
+                })
+            });
+
+            if (response.status === 201) {
+                const novaTask = await response.json();
+                const taskCompleta = {
+                    ...novaTask,
+                    comentarios: []
+                };
+                
+                setListas(listas.map(l => 
+                    l.id === listaId 
+                        ? { ...l, tasks: [...(l.tasks || []), taskCompleta] }
+                        : l
+                ));
+                toast.success("Task criada com sucesso!");
+            } else {
+                const erro = await response.json();
+                toast.error(`Erro ao criar task: ${erro.erro || 'Erro desconhecido'}`);
+            }
+        } catch (error) {
+            console.error("Erro ao criar task:", error);
+            toast.error("Erro ao criar task");
+        }
+    }
+
     return (
         <div className=" pt-6 w-[75vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem]">
             <h1 className="text-2xl font-bold mb-6 text-[#3B82F6] border-[#3B82F6] border-b-2">
@@ -273,43 +328,44 @@ export default function CardLista() {
                                     </>
                                 )}
                             </div>
-                            {lista.tasks?.length ? (
-                                <ul className="mt-2 flex-1 overflow-y-auto overflow-x-hidden pr-1 space-y-2">
-                                    {lista.tasks.map((task) => (
-                                        <ItemTask 
-                                            key={task.id}
-                                            task={{
-                                                ...task,
-                                                listaId: lista.id,
-                                            } as TaskType}
-                                            tasks={lista.tasks?.map(t => ({
-                                                ...t,
-                                                listaId: lista.id,
-                                            } as TaskType)) || []}
-                                            setTasks={(novasTasks) => {
-                                                if (typeof novasTasks === 'function') return;
-                                                const tasksAtualizadas = novasTasks.map(t => ({
-                                                    usuarioId: t.usuarioId,
-                                                    id: t.id,
-                                                    titulo: t.titulo,
-                                                    descricao: t.descricao,
-                                                    prazo: t.prazo,
-                                                    comentarios: t.comentarios,
-                                                    destaque: t.destaque,
-                                                }));
-                                                setListas(listas.map(l => 
-                                                    l.id === lista.id 
-                                                        ? { ...l, tasks: tasksAtualizadas }
-                                                        : l
-                                                ));
-                                            }}
-                                            lista={lista}
-                                        />
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p className="text-gray-500">Sem tasks</p>
-                            )}
+                            <ul className="mt-2 flex-1 overflow-y-auto overflow-x-hidden pr-1 space-y-2">
+                                {lista.tasks?.length ? (
+                                    <>
+                                        {lista.tasks.map((task) => (
+                                            <ItemTask 
+                                                key={task.id}
+                                                task={{
+                                                    ...task,
+                                                    listaId: lista.id,
+                                                } as TaskType}
+                                                tasks={lista.tasks?.map(t => ({
+                                                    ...t,
+                                                    listaId: lista.id,
+                                                } as TaskType)) || []}
+                                                setTasks={(novasTasks) => {
+                                                    if (typeof novasTasks === 'function') return;
+                                                    const tasksAtualizadas = novasTasks.map(t => ({
+                                                        usuarioId: t.usuarioId,
+                                                        id: t.id,
+                                                        titulo: t.titulo,
+                                                        descricao: t.descricao,
+                                                        prazo: t.prazo,
+                                                        comentarios: t.comentarios,
+                                                        destaque: t.destaque,
+                                                    }));
+                                                    setListas(listas.map(l => 
+                                                        l.id === lista.id 
+                                                            ? { ...l, tasks: tasksAtualizadas }
+                                                            : l
+                                                    ));
+                                                }}
+                                                lista={lista}
+                                            />
+                                        ))}
+                                    </>
+                                ) : null}
+                                <NewTask onCreateTask={(titulo) => criarNovaTask(lista.id, titulo)} />
+                            </ul>
                         </div>
                     ))}
                     <NewLista onClick={criarNovaLista} />
