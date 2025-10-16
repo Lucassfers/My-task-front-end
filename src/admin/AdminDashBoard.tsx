@@ -1,4 +1,4 @@
-import './AdminDashboard.css'
+import './AdminDashBoard.css'
 import { useEffect, useState } from "react";
 import { VictoryPie, VictoryLabel, VictoryTheme } from "victory";
 const apiUrl = import.meta.env.VITE_API_URL
