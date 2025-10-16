@@ -127,7 +127,7 @@ export default function CardLista() {
     
 
     return (
-        <div className="pl-34 pt-6 w-[80vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem]">
+        <div className=" pt-6 w-[75vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem]">
             <h1 className="text-2xl font-bold mb-6 text-[#3B82F6] border-[#3B82F6] border-b-2">
                 {board.titulo}
             </h1>
