@@ -5,6 +5,7 @@ export type TaskType = {
     prazo: string
     listaId: number
     destaque: boolean
+    concluida?: boolean
     usuarioId: string
     comentarios?: {
         id: number

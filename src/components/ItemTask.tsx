@@ -120,28 +120,36 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
         }
     }
 
-    async function concluirTask() {
+    async function toggleConcluirTask() {
         if (!usuario?.token) {
-            toast.error("Você precisa estar logado para concluir uma task");
-            return
+            toast.error("Você precisa estar logado para marcar como concluída");
+            return;
         }
-            const response = await fetch(`${apiUrl}/tasks/${task.id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-type": "application/json",
-                        Authorization: `Bearer ${usuario.token}`
-                    },
-                },
-            )
-            if (response.status == 200) {
-                const tasks2 = tasks.filter(x => x.id != task.id)
-                setTasks(tasks2)
-                toast.success("Task Concluida")
+
+        try {
+            const response = await fetch(`${apiUrl}/tasks/concluir/${task.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${usuario.token}`
+                }
+            });
+
+            if (response.status === 200) {
+                const taskAtualizada = await response.json();
+                const novasTasks = tasks.map(t => 
+                    t.id === task.id ? { ...t, concluida: taskAtualizada.concluida } : t
+                );
+                setTasks(novasTasks);
+                toast.success(taskAtualizada.concluida ? "Task concluída!" : "Task reaberta!");
             } else {
-                toast.error("Não foi possível concluir a Task")
+                toast.error("Não foi possível atualizar a task");
             }
+        } catch (error) {
+            console.error("Erro ao concluir task:", error);
+            toast.error("Erro ao atualizar task");
         }
+    }
     
 
     return (
@@ -149,10 +157,17 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
             <li
                 className="text-[#3B82F6] rounded-[8px] border p-2 hover:bg-blue-300 hover:text-white ">
                 <div className="flex items-center">
-                    <input type="checkbox" className="cursor-pointer ml-[0.4rem]" />
+                    <input 
+                        type="checkbox" 
+                        className="cursor-pointer ml-[0.4rem]"
+                        checked={task.concluida || false}
+                        onChange={toggleConcluirTask}
+                    />
                     <button
                         onClick={() => setIsOpen(true)}
-                        className="font-medium ml-[1rem] w-[8.5rem] cursor-pointer text-start transition-all "
+                        className={`font-medium ml-[1rem] w-[8.5rem] cursor-pointer text-start transition-all ${
+                            task.concluida ? 'line-through opacity-60' : ''
+                        }`}
                     >
                         {task.titulo}
                     </button>
