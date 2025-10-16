@@ -14,8 +14,8 @@ export default function Layout() {
   const location = useLocation();
 
   useEffect(() => {
-    async function buscaUsuario(id: string) {
-      const response = await fetch(`${apiUrl}/usuarios/${id}`);
+    async function buscaUsuario(dadosUsuario: any) {
+      const response = await fetch(`${apiUrl}/usuarios/${dadosUsuario.id}`);
       if (!response.ok) {
         deslogaUsuario();
         return;
@@ -24,9 +24,16 @@ export default function Layout() {
       logaUsuario(dados);
     }
 
-    if (localStorage.getItem("usuarioKey")) {
-      const idUsuario = localStorage.getItem("usuarioKey") as string;
-      buscaUsuario(idUsuario); 
+    // Busca primeiro no localStorage, depois no sessionStorage
+    const usuarioString = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
+    if (usuarioString) {
+      try {
+        const dadosUsuario = JSON.parse(usuarioString);
+        buscaUsuario(dadosUsuario); 
+      } catch (error) {
+        console.error("Erro ao parsear dados do usuário:", error);
+        deslogaUsuario();
+      }
     } else {
       deslogaUsuario();
     }

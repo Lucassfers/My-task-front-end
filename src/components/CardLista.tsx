@@ -30,7 +30,8 @@ export default function CardLista() {
         (async () => {
             try {
                 setLoading(true);
-                const dados = localStorage.getItem("usuarioKey");
+                // Busca primeiro no localStorage, depois no sessionStorage
+                const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
                 const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
                 const token = usuarioData?.token ?? "";
                 
@@ -92,7 +93,8 @@ export default function CardLista() {
 
     async function enviarComentario(data: Inputs) {
         if (!openTaskId) return;
-        const dados = localStorage.getItem("usuarioKey");
+        // Busca primeiro no localStorage, depois no sessionStorage
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
         const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
         const token = usuarioData?.token ?? "";
         

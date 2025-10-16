@@ -16,27 +16,6 @@ export default function Login() {
   const { logaUsuario } = useUsuarioStore()
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   const script = document.createElement("script")
-  //   script.src = "/finisher-header.es5.min.js"
-  //   script.onload = () => {
-  //     // @ts-ignore
-  //     if (window.FinisherHeader) {
-  //       // @ts-ignore
-  //       new window.FinisherHeader({
-  //         count: 12,
-  //         size: { min: 1300, max: 1500, pulse: 0 },
-  //         speed: { x: { min: 0.6, max: 1 }, y: { min: 0.6, max: 3 } },
-  //         colors: { background: "#fff", particles: ["#1cffb3", "#87ddfe", "#231efe", "#5f0aff"] },
-  //         blending: "lighten",
-  //         opacity: { center: 0.6, edge: 0 },
-  //         skew: 0,
-  //         shapes: ["c"],
-  //       })
-  //     }
-  //   }
-  //   document.body.appendChild(script)
-  // }, [])
 
   async function verificaLogin(data: Inputs) {
     const response = await fetch(`${apiUrl}/login`, {
@@ -44,21 +23,29 @@ export default function Login() {
       method: "POST",
       body: JSON.stringify({ email: data.email, senha: data.senha }),
     })
-    if(!response.ok){
-      toast.error("Erro... Login ou senha incorretos")
-      return
-    }
 
-    const dados = await response.json()
-    logaUsuario(dados)
+        if (response.status == 200) {
+            const dados = await response.json()
 
-    if(data.manter){
-      localStorage.setItem("usuarioKey", JSON.stringify(dados))
-    } else {
-      localStorage.removeItem("usuarioKey")
-    }
-    navigate("/")
-  }
+            // "coloca" os dados do usuário no contexto
+            logaUsuario(dados)
+            
+            // Implementação do "Manter Conectado"
+            if (data.manter) {
+                // Marcou "Manter Conectado" → salva no localStorage (persiste)
+                localStorage.setItem("usuarioKey", JSON.stringify(dados))
+                sessionStorage.removeItem("usuarioKey") // Remove do session se existir
+            } else {
+                // NÃO marcou → salva no sessionStorage (expira ao fechar navegador)
+                sessionStorage.setItem("usuarioKey", JSON.stringify(dados))
+                localStorage.removeItem("usuarioKey") // Remove do local se existir
+            }
+
+            navigate("/")
+        } else {
+            toast.error("Erro... Login ou senha incorretos")
+        }
+   }
 
   return (
     <div className="relative flex items-center justify-center min-h-screen">

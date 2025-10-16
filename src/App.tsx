@@ -16,7 +16,8 @@ export default function App({ termoPesquisa }: AppProps) {
   useEffect(() => {
     async function buscaBoardsPessoais() {
       try{
-        const dados = localStorage.getItem("usuarioKey")
+        // Busca primeiro no localStorage (manter conectado), depois no sessionStorage
+        const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey")
         const usuario = dados ? JSON.parse(dados) as { token?: string } : null
         const token = usuario?.token ?? ""
 
