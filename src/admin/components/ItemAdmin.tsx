@@ -1,7 +1,6 @@
 import { TiDeleteOutline } from "react-icons/ti"
-import { FaListOl } from "react-icons/fa6";
 import { useAdminStore } from "../context/AdminContext"
-
+import { toast } from "sonner"
 import type { AdminType } from "../../utils/AdminType"
 
 type listaAdminsProps = {
@@ -16,13 +15,14 @@ export default function ItemAdmin({ adminLinha, admins, setAdmins }: listaAdmins
   const { admin } = useAdminStore()
 
   async function excluirAdmin() {
-    if (!admin || admin.nivel == 1) {
-      alert("Você não tem permissão para excluir admins");
+    if (!admin) {
+      toast.error("Você não tem permissão para excluir admins");
       return;
     }
 
-    if (confirm(`Confirma a exclusão`)) {
-      const response = await fetch(`${apiUrl}/admins/${adminLinha.id}`,
+    if (confirm(`Confirma a exclusão de ${adminLinha.nome}?`)) {
+      console.log("Enviando DELETE para:", `${apiUrl}/admin/${adminLinha.id}`)
+      const response = await fetch(`${apiUrl}/admin/${adminLinha.id}`,
         {
           method: "DELETE",
           headers: {
@@ -31,44 +31,24 @@ export default function ItemAdmin({ adminLinha, admins, setAdmins }: listaAdmins
           },
         },
       )
-
+      console.log("Status:", response.status)
+      console.log("Content-Type:", response.headers.get("content-type"))
+      const contentType = response.headers.get("content-type")
+      if (!contentType || !contentType.includes("application/json")) {
+        const textoResposta = await response.text()
+        console.error("Resposta não é JSON:", textoResposta)
+        toast.error("Erro: O servidor retornou HTML em vez de JSON. Verifique se a rota está correta.")
+        return
+      }
       if (response.status == 200) {
         const admins2 = admins.filter(x => x.id != adminLinha.id)
         setAdmins(admins2)
-        alert("Admin excluído com sucesso")
+        toast.success("Admin excluído com sucesso")
       } else {
-        alert("Erro... Admin não foi excluído")
+        const erro = await response.json()
+        console.error("Erro do servidor:", erro)
+        toast.error(erro.error || erro.message || "Erro... Admin não foi excluído")
       }
-    }
-  }
-
-  async function alterarNivel() {
-
-    const nivel = Number(prompt("Novo Nível do Admin?"))
-
-    if (nivel < 1 || nivel > 5) {
-      alert("Erro... Nível deve ser entre 1 e 5")
-      return
-    }
-
-    const response = await fetch(`${apiUrl}/admins/nivel/${adminLinha.id}/${nivel}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${admin.token}`
-        },
-      },
-    )
-
-    if (response.status == 200) {
-      const admins2 = admins.map(x => {
-        if (x.id == adminLinha.id) {
-          return { ...x, nivel: nivel }
-        }
-        return x
-      })
-      setAdmins(admins2)
     }
   }
 
@@ -80,14 +60,9 @@ export default function ItemAdmin({ adminLinha, admins, setAdmins }: listaAdmins
       <td className={`px-6 py-4`}>
         {adminLinha.email}
       </td>
-      <td className={`px-6 py-4`}>
-        {adminLinha.nivel}
-      </td>
       <td className="px-6 py-4">
         <TiDeleteOutline className="text-3xl text-red-600 inline-block cursor-pointer" title="Excluir"
-          onClick={excluirAdmin} />&nbsp;
-        <FaListOl className="text-3xl text-yellow-600 inline-block cursor-pointer" title="Alterar Nível"
-          onClick={alterarNivel} />
+          onClick={excluirAdmin} />
       </td>
     </tr>
   )

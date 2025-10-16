@@ -23,7 +23,7 @@ export default function AdminHeader() {
 
   return (
     <header className="bg-white d py-4">
-      <div className="w-[80%] mx-auto px-6 flex items-center justify-between">
+      <div className="w-[80%] mx-auto  px-6 flex items-center justify-between">
 
         <div className="flex items-center gap-2 ">
           <FaRegCalendarCheck size={24} className="text-black" />
@@ -31,7 +31,7 @@ export default function AdminHeader() {
         </div>
 
         <div className="flex flex-1 justify-center">
-          <h1>Administrador</h1>
+          <h1 className="text-black text-[1.5rem] font-medium">Administrador</h1>
         </div>
 
         <div className="flex items-center">

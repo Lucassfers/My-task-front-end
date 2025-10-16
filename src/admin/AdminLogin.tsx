@@ -11,7 +11,6 @@ const apiUrl = import.meta.env.VITE_API_URL
 type Inputs = {
   email: string
   senha: string
-  manter: boolean
 }
 
 export default function AdminLogin() {
@@ -33,16 +32,7 @@ export default function AdminLogin() {
     if (response.status == 200) {
       const dados = await response.json()
       logaAdmin(dados)
-      if (data.manter) {
-        localStorage.setItem("usuarioKey", dados.id)
-      } else {
-        if (localStorage.getItem("usuarioKey")) {
-          localStorage.removeItem("usuarioKey")
-        }
-      }
-      navigate(`/admin`, { replace: true })
-    } else if (response.status == 400) {
-      toast.error("Erro... Login ou senha incorretos")
+      navigate("/admin")
     }
   }
 
@@ -69,18 +59,7 @@ export default function AdminLogin() {
               required />
           </div>
           <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                type="checkbox"
-                id="remember"
-                aria-describedby="remember"
-                className="w-4 h-4 border rounded bg-gray-50"
-                {...register("manter")}
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label htmlFor="remember" className="text-gray-500">Manter Conectado</label>
-            </div>
+            
           </div>
           <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded transition-colors hover:bg-blue-700 tracking-widest my-7">Entrar</button>
         </form>

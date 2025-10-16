@@ -79,8 +79,8 @@ export default function AdminDashboard() {
   ))
 
   return (
-    <div className="container mt-24">
-      <h2 className="text-3xl mb-4 font-bold">Visão Geral do Sistema</h2>
+    <div className="container mt-12">
+      <h2 className="text-3xl mb-4 font-bold pl-12 pb-15">Visão Geral do Sistema</h2>
 
       <div className="w-2/3 flex justify-between mx-auto mb-5">
         <div className="border-blue-600 border rounded p-6 w-1/3 me-3">
