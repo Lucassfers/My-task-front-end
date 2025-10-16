@@ -31,6 +31,7 @@ export default function AdminLogin() {
 
     if (response.status == 200) {
       const dados = await response.json()
+      toast.success("Admin Logado com sucesso.")
       logaAdmin(dados)
       navigate("/admin")
     }

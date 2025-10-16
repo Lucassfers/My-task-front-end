@@ -19,12 +19,11 @@ export default function CardLista() {
     const { boardId } = useParams<{ boardId: string }>();
     const [board, setBoard] = useState<BoardType | null>(null);
     const [listas, setListas] = useState<ListaType[]>([]);
-    const [tasks, setTasks] = useState<TaskType[]>([]);
     const { usuario } = useUsuarioStore();
     const [comentarios, setComentarios] = useState<ComentarioType[]>([]);
     const [loading, setLoading] = useState(true);
-    const { register, handleSubmit, reset } = useForm<Inputs>();
-    const [openTaskId, setOpenTaskId] = useState<number | null>(null);
+    const { reset } = useForm<Inputs>();
+    const [openTaskId] = useState<number | null>(null);
     const listaComentariosRef = useRef<HTMLDivElement | null>(null);
     const [editandoListaId, setEditandoListaId] = useState<number | null>(null);
     const [novoTituloLista, setNovoTituloLista] = useState("");
@@ -45,8 +44,6 @@ export default function CardLista() {
                 });
                 const dados2 = await response.json();
                 setBoard(dados2);
-                
-                // Ordena as tasks para que as destacadas fiquem no topo
                 const listasOrdenadas = (dados2.listas ?? []).map((lista: ListaType) => ({
                     ...lista,
                     tasks: lista.tasks?.sort((a, b) => {
@@ -249,7 +246,6 @@ export default function CardLista() {
         const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
         const token = usuarioData?.token ?? "";
 
-        // Prazo padrão: hoje + 7 dias
         const prazo = new Date();
         prazo.setDate(prazo.getDate() + 7);
 

@@ -27,7 +27,6 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
     const [loading, setLoading] = useState(true);
     const [comentarios, setComentarios] = useState<ComentarioType[]>([])
     const [isOpen, setIsOpen] = useState(false);
-    const [favoritar, setFavoritar] = useState(false);
     const { register, handleSubmit, reset }= useForm<Inputs>();
     const listaComentariosRef = useRef<HTMLDivElement | null>(null);
 

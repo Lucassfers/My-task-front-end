@@ -1,5 +1,4 @@
-// AddBoard.tsx
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -11,8 +10,8 @@ type BoardForm = {
 };
 
 export async function AddBoard(data: BoardForm) {
-  const { register, handleSubmit, reset } = useForm<BoardForm>()
-  // const { boards } = useBoardStore()
+  const { register, handleSubmit} = useForm<BoardForm>()
+
   const token = localStorage.getItem("token");
   const response = await fetch(`${apiUrl}/boards`, {
     headers: {
@@ -61,7 +60,6 @@ export async function AddBoard(data: BoardForm) {
           <option value="PESSOAL">PESSOAL</option>
           <option value="OUTRO">OUTRO</option>
         </select>
-
       </div>
 
       <input type="hidden" {...register("usuarioId")} />

@@ -30,14 +30,6 @@ export function CardBoard({ data }: { data: BoardType }) {
             </span>
           )}
         </div>
-
-        {/* <div className="mt-3 h-2 w-full rounded-full bg-[#3B82F6] dark:bg-gray-700">
-          <div
-            className="h-2 rounded-full bg-[#3B82F6] transition-all"
-            style={{ width: `${Math.max(0, Math.min(100, data?.progresso ?? 0))}%` }}
-          />
-        </div> */}
-
         {data?.updatedAt && (
           <p className="mt-3 text-xs text-gray-400">
             Atualizado em {new Date(data.updatedAt).toLocaleDateString("pt-BR")}
