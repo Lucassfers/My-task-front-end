@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom'
 import { useEffect } from 'react'
-import { Toaster } from 'sonner'
 import { useAdminStore } from "./context/AdminContext"
 import { useNavigate } from "react-router-dom"
 import { MenuLateralAdmin } from '../admin/AdminMenuLateral.tsx'
@@ -27,10 +26,9 @@ export default function AdminLayout() {
     <>
       <AdminHeader />
       <MenuLateralAdmin />
-      <div className="p-4 sm:ml-64">
+      <div className="p-4 sm:ml-64 bg-[#F5F7FA] rounded-tl-3xl ">
         <Outlet />
       </div>
-      <Toaster richColors position="top-right" />
     </>
   )
 }
