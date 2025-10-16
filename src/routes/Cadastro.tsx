@@ -62,7 +62,7 @@ export default function CadastroUsuario() {
                             type="text"
                             placeholder="Nome"
                             id="nome"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="w-full p-2 border-b-2 border-blue-500 focus:outline-none"
                             required {...register("nome")}
                         />
                     </div>
@@ -71,13 +71,13 @@ export default function CadastroUsuario() {
                             type="email"
                             placeholder="E-mail"
                             id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="w-full p-2 border-b-2 border-blue-500 focus:outline-none"
                             required {...register("email")}
                         />
                     </div>
                     <div>
                         <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha de Acesso:</label>
-                        <input type="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
+                        <input type="password" id="password" placeholder="••••••••" className="w-full p-2 border-b-2 border-blue-500 focus:outline-none" required
                             {...register("senha")} />
                         <p className="mt-1 text-xs text-gray-500">
                             A senha deve ter no mínimo 8 caracteres, incluindo maiúscula, minúscula, número e símbolo.
@@ -85,13 +85,13 @@ export default function CadastroUsuario() {
                     </div>
                     <div>
                         <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirme a Senha:</label>
-                        <input type="password" id="confirm-password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
+                        <input type="password" id="confirm-password" placeholder="••••••••" className="w-full p-2 border-b-2 border-blue-500 focus:outline-none" required
                             {...register("senha2")} />
                     </div>
-                    <button type="submit" className="w-full text-white bg-blue-600 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">Criar sua Conta</button>
+                    <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded transition-colors hover:bg-blue-700 tracking-widest my-7">Criar sua Conta</button>
                 </form>
                 <p className="flex justify-center text-gray-500 mb-7 transition-all hover:text-lg bg-transparent border-none cursor-pointer itemscenter mx-auto">
-                    Já possui uma conta? <Link to="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Faça Login</Link>
+                    Já possui uma conta? <Link to="/login" className="text-blue-600 hover:underline ml-1">Faça Login</Link>
                 </p>
             </div>
         </div>
