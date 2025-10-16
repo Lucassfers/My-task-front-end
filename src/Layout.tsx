@@ -21,10 +21,10 @@ export default function Layout() {
         return;
       }
       const dados = await response.json();
-      logaUsuario(dados);
+      const usuarioToken = { ...dados, token: dadosUsuario.token };
+      logaUsuario(usuarioToken);
     }
 
-    // Busca primeiro no localStorage, depois no sessionStorage
     const usuarioString = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
     if (usuarioString) {
       try {

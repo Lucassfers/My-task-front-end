@@ -24,24 +24,19 @@ export default function Login() {
       body: JSON.stringify({ email: data.email, senha: data.senha }),
     })
 
-        if (response.status == 200) {
-            const dados = await response.json()
+    if (response.status == 200) {
+      const dados = await response.json()
+      // Garante que o token venha no objeto salvo e no estado
+      logaUsuario(dados)
+      const payload = JSON.stringify(dados)
+      if (data.manter) {
+        localStorage.setItem("usuarioKey", payload)
+        sessionStorage.removeItem("usuarioKey") 
+      } else {
+        sessionStorage.setItem("usuarioKey", payload)
+        localStorage.removeItem("usuarioKey") 
+      }
 
-            // "coloca" os dados do usuário no contexto
-            logaUsuario(dados)
-            
-            // Implementação do "Manter Conectado"
-            if (data.manter) {
-                // Marcou "Manter Conectado" → salva no localStorage (persiste)
-                localStorage.setItem("usuarioKey", JSON.stringify(dados))
-                sessionStorage.removeItem("usuarioKey") // Remove do session se existir
-            } else {
-                // NÃO marcou → salva no sessionStorage (expira ao fechar navegador)
-                sessionStorage.setItem("usuarioKey", JSON.stringify(dados))
-                localStorage.removeItem("usuarioKey") // Remove do local se existir
-            }
-
-            // Redireciona para a página de boards após login
             navigate("/boards")
         } else {
             toast.error("Erro... Login ou senha incorretos")

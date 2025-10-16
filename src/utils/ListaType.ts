@@ -9,6 +9,7 @@ export type ListaType = {
         titulo: string
         descricao: string
         prazo: string
+        destaque?: boolean
         comentarios?: {
             id: number
             conteudo: string

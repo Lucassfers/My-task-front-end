@@ -1,15 +1,14 @@
-import { MdOutlineInsertComment } from "react-icons/md";
-import { FaRegCalendarCheck } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import type { BoardType } from "../utils/BoardType";
 import type { ListaType } from "../utils/ListaType";
-import { Modal } from "./Modal";
+import type { TaskType } from "../utils/TaskType";
 import type { ComentarioType } from "../utils/ComentarioType";
 import { useUsuarioStore } from "../context/UsuarioContext";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import ItemTask from "./ItemTask";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 type Inputs = { conteudo: string };
@@ -18,6 +17,7 @@ export default function CardLista() {
     const { boardId } = useParams<{ boardId: string }>();
     const [board, setBoard] = useState<BoardType | null>(null);
     const [listas, setListas] = useState<ListaType[]>([]);
+    const [tasks, setTasks] = useState<TaskType[]>([]);
     const { usuario } = useUsuarioStore();
     const [comentarios, setComentarios] = useState<ComentarioType[]>([]);
     const [loading, setLoading] = useState(true);
@@ -30,7 +30,6 @@ export default function CardLista() {
         (async () => {
             try {
                 setLoading(true);
-                // Busca primeiro no localStorage, depois no sessionStorage
                 const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
                 const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
                 const token = usuarioData?.token ?? "";
@@ -42,7 +41,18 @@ export default function CardLista() {
                 });
                 const dados2 = await response.json();
                 setBoard(dados2);
-                setListas(dados2.listas ?? []);
+                
+                // Ordena as tasks para que as destacadas fiquem no topo
+                const listasOrdenadas = (dados2.listas ?? []).map((lista: ListaType) => ({
+                    ...lista,
+                    tasks: lista.tasks?.sort((a, b) => {
+                        if (a.destaque && !b.destaque) return -1;
+                        if (!a.destaque && b.destaque) return 1;
+                        return 0;
+                    })
+                }));
+                
+                setListas(listasOrdenadas);
             } catch (e) {
                 console.error(e);
             } finally {
@@ -93,7 +103,6 @@ export default function CardLista() {
 
     async function enviarComentario(data: Inputs) {
         if (!openTaskId) return;
-        // Busca primeiro no localStorage, depois no sessionStorage
         const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
         const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
         const token = usuarioData?.token ?? "";
@@ -146,103 +155,36 @@ export default function CardLista() {
                             </div>
                             {lista.tasks?.length ? (
                                 <ul className="mt-2 flex-1 overflow-y-auto overflow-x-hidden pr-1 space-y-2">
-                                    {lista.tasks.map((t) => (
-                                        <li
-                                            key={t.id}
-                                            className="text-[#3B82F6] rounded-[8px] border p-2 hover:bg-blue-300 hover:text-white ">
-                                            <div className="flex items-center">
-                                                <input type="checkbox" className="cursor-pointer ml-[0.4rem]" />
-                                                <button
-                                                    onClick={() => setOpenTaskId(t.id)}
-                                                    className="font-medium ml-[1rem] w-[8.5rem] cursor-pointer text-start transition-all "
-                                                >
-                                                    {t.titulo}
-                                                </button>
-                                            </div>
-                                            <Modal isOpen={openTaskId === t.id} onClose={() => setOpenTaskId(null)}>
-                                                <div className="max-w-[90vw] h-[27rem] mr-[2rem]">
-                                                    <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[1rem] text-[#3B82F6]">
-                                                        {lista.titulo}
-                                                    </h1>
-                                                    <div className="flex items-center justify-between py-3 ">
-                                                        <h1 className="text-l font-bold pl-[1rem] text-[#3B82F6]">{t.titulo}</h1>
-                                                    </div>
-                                                    <div className="flex gap-6 pl-[1rem]">
-                                                        <div className="bg-gray-100 rounded-2xl p-5 w-[27rem] h-[20rem] shadow-md shadow-blue-400">
-                                                            <div className="flex items-center gap-2 mb-2">
-                                                                <FaRegCalendarCheck className="text-[#3B82F6]" />
-                                                                <h3 className="font-bold  text-[#3B82F6]">Descrição</h3>
-                                                                <div className="ml-[14rem] text-[#3B82F6] cursor-pointer">
-                                                                    <button className="rounded-md border px-3 py-1.5 text-sm bg-[#3B82F6] text-white font-bold hover:shadow-2xl ">
-                                                                        Editar
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            <p className="text-sm leading-relaxed whitespace-pre-wrap break-words text-[#3B82F6] bg-white py-2 px-3 rounded-md min-h-[4rem] font-medium  ">
-                                                                {t?.descricao?.trim() ? t.descricao : "Sem descrição"}
-                                                            </p>
-                                                            {t.prazo && (
-                                                                <div className="mt-4 flex items-center gap-2 text-sm text-[#3B82F6]">
-                                                                    <span className="font-bold ">Prazo para:</span>
-                                                                    <span className="opacity-90">
-                                                                        {new Date(t.prazo).toLocaleDateString("pt-BR", {
-                                                                            day: "2-digit",
-                                                                            month: "short",
-                                                                            year: "numeric",
-                                                                        })}
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <form
-                                                            onSubmit={handleSubmit(enviarComentario)}
-                                                            className="bg-gray-100 rounded-2xl p-5 w-[28rem] h-[20rem] ml-[1rem] shadow-md shadow-blue-400 text-[#3B82F6] flex flex-col min-h-0 overflow-hidden">
-                                                            <div className="flex items-center gap-3 mb-3">
-                                                                <MdOutlineInsertComment className="mt-1" />
-                                                                <h2 className="font-semibold">Comentários e atividade</h2>
-                                                            </div>
-
-                                                            <div className="flex items-start gap-3 mb-4">
-                                                                <div className="flex-1">
-                                                                    <input
-                                                                        {...register("conteudo", { required: true })}
-                                                                        type="text"
-                                                                        placeholder="Escreva um comentário…"
-                                                                        className="w-full rounded-md border px-3 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-600"
-                                                                    />
-                                                                </div>
-                                                                <button
-                                                                    type="submit"
-                                                                    className="rounded-md  px-3 py-1.5 text-sm bg-[#3B82F6] text-white font-bold cursor-pointer"
-                                                                >
-                                                                    Enviar
-                                                                </button>
-                                                            </div>
-                                                            <div ref={listaComentariosRef}
-                                                                className="flex-1 overflow-y-auto pr-2 space-y-2">
-                                                                {(comentarios ?? []).length > 0 ? (
-                                                                    comentarios.map((c) => (
-                                                                        <div key={c.id} className="py-1">
-                                                                            <p
-                                                                                className="w-full max-w-full bg-white rounded-sm px-4 py-2 text-sm text-gray-600 
-                                                 whitespace-pre-wrap break-words drop-shadow-md"
-                                                                            >
-                                                                                <span className="font-semibold text-blue-600">
-                                                                                    {c.usuario?.nome || "Usuário desconhecido"}:
-                                                                                </span>{" "}
-                                                                                {c.conteudo}
-                                                                            </p>
-                                                                        </div>
-                                                                    ))
-                                                                ) : (
-                                                                    <p className="text-gray-400">Sem comentários</p>
-                                                                )}
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </Modal>
-                                        </li>
+                                    {lista.tasks.map((task) => (
+                                        <ItemTask 
+                                            key={task.id}
+                                            task={{
+                                                ...task,
+                                                listaId: lista.id,
+                                            } as TaskType}
+                                            tasks={lista.tasks?.map(t => ({
+                                                ...t,
+                                                listaId: lista.id,
+                                            } as TaskType)) || []}
+                                            setTasks={(novasTasks) => {
+                                                if (typeof novasTasks === 'function') return;
+                                                const tasksAtualizadas = novasTasks.map(t => ({
+                                                    usuarioId: t.usuarioId,
+                                                    id: t.id,
+                                                    titulo: t.titulo,
+                                                    descricao: t.descricao,
+                                                    prazo: t.prazo,
+                                                    comentarios: t.comentarios,
+                                                    destaque: t.destaque,
+                                                }));
+                                                setListas(listas.map(l => 
+                                                    l.id === lista.id 
+                                                        ? { ...l, tasks: tasksAtualizadas }
+                                                        : l
+                                                ));
+                                            }}
+                                            lista={lista}
+                                        />
                                     ))}
                                 </ul>
                             ) : (

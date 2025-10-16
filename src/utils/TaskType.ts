@@ -3,12 +3,17 @@ export type TaskType = {
     titulo: string
     descricao: string
     prazo: string
-    listaId: number,
+    listaId: number
+    destaque: boolean
     usuarioId: string
     comentarios?: {
         id: number
         conteudo: string
         taskId: number
         usuarioId: string
-    }
+        usuario?: {
+            id: string
+            nome: string
+        }
+    }[]
 }
