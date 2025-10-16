@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { useUsuarioStore } from "../context/UsuarioContext"
 
@@ -41,7 +41,8 @@ export default function Login() {
                 localStorage.removeItem("usuarioKey") // Remove do local se existir
             }
 
-            navigate("/")
+            // Redireciona para a página de boards após login
+            navigate("/boards")
         } else {
             toast.error("Erro... Login ou senha incorretos")
         }
@@ -86,7 +87,7 @@ export default function Login() {
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded transition-colors hover:bg-blue-700 tracking-widest my-7"
-          >
+            >
             ENTRAR
           </button>
         </form>
@@ -95,7 +96,7 @@ export default function Login() {
           onClick={() => navigate("/cadastro")}
           className="flex justify-center text-gray-500 mb-7 transition-all hover:text-lg bg-transparent border-none cursor-pointer itemscenter mx-auto"
         >
-          Não possui conta? Cadastre-se!
+          Não possui conta? <Link to="/cadastro" className="text-blue-600 hover:underline ml-1">Cadastre-se!</Link>
         </button>
       </div>
     </div>
