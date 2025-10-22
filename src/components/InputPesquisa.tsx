@@ -30,7 +30,7 @@ export function InputPesquisa({ onPesquisa }: InputPesquisaProps) {
             <input 
                 type="search" 
                 placeholder="Pesquisar boards..."
-                className="h-10 w-[30rem] rounded-[15px] border-2 border-[#3B82F6] pl-8 pr-10 text-sm text-black placeholder-black outline-none  focus:ring-2 focus:border-none transition-all duration-500 hover:shadow-md"
+                className="h-10 w-[30rem] rounded-[15px] border-2 border-[#5633F0] pl-8 pr-10 text-sm text-black placeholder-black outline-none  focus:ring-2 focus:border-none transition-all duration-500 hover:shadow-md"
                 {...register('termo')} 
             />
         </form>

@@ -150,7 +150,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
     return (
         <>
             <li
-                className="text-[#3B82F6] rounded-[8px] border p-2 hover:bg-blue-300 hover:text-white ">
+                className="bg-[#1A1D26] rounded-[8px] p-2 hover:bg-[#4B28D8] hover:text-white border-[#2A2D3A] border-2">
                 <div className="flex items-center">
                     <input 
                         type="checkbox" 
@@ -175,29 +175,29 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                     
                 </div>
                 <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                    <div className="max-w-[90vw] h-[27rem] mr-[2rem]">
-                        <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[1rem] text-[#3B82F6]">
+                    <div className="max-w-[90vw] h-[27rem] mr-[2rem] bg">
+                        <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[1rem] text-[#5633F0]">
                             {lista.titulo}
                         </h1>
                         <div className="flex items-center justify-between py-3 ">
-                            <h1 className="text-l font-bold pl-[1rem] text-[#3B82F6]">{task.titulo}</h1>
+                            <h1 className="text-l font-bold pl-[1rem] text-[#5633F0]">{task.titulo}</h1>
                         </div>
                         <div className="flex gap-6 pl-[1rem]">
-                            <div className="bg-gray-100 rounded-2xl p-5 w-[27rem] h-[20rem] shadow-md shadow-blue-400">
+                            <div className="bg-[#2A2D3A] rounded-2xl p-5 w-[27rem] h-[20rem] shadow-md shadow-[#5633F0]">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <FaRegCalendarCheck className="text-[#3B82F6]" />
-                                    <h3 className="font-bold  text-[#3B82F6]">Descrição</h3>
-                                    <div className="ml-[14rem] text-[#3B82F6] cursor-pointer">
-                                        <button className="rounded-md border px-3 py-1.5 text-sm bg-[#3B82F6] text-white font-bold hover:shadow-2xl ">
+                                    <FaRegCalendarCheck className="text-[#5633F0]" />
+                                    <h3 className="font-bold  text-[#5633F0]">Descrição</h3>
+                                    <div className="ml-[14rem] text-[#5633F0] cursor-pointer">
+                                        <button className="rounded-md border px-3 py-1.5 text-sm bg-[#5633F0] text-white font-bold hover:shadow-2xl ">
                                             Editar
                                         </button>
                                     </div>
                                 </div>
-                                <p className="text-sm leading-relaxed whitespace-pre-wrap break-words text-[#3B82F6] bg-white py-2 px-3 rounded-md min-h-[4rem] font-medium  ">
+                                <p className="text-sm leading-relaxed whitespace-pre-wrap break-words text-[#5633F0] bg-[#2A2D3A] py-2 px-3 rounded-md min-h-[4rem] font-medium  ">
                                     {task?.descricao?.trim() ? task.descricao : "Sem descrição"}
                                 </p>
                                 {task.prazo && (
-                                    <div className="mt-4 flex items-center gap-2 text-sm text-[#3B82F6]">
+                                    <div className="mt-4 flex items-center gap-2 text-sm text-[#5633F0]">
                                         <span className="font-bold ">Prazo para:</span>
                                         <span className="opacity-90">
                                             {new Date(task.prazo).toLocaleDateString("pt-BR", {
@@ -211,7 +211,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                             </div>
                             <form
                                 onSubmit={handleSubmit(enviarComentario)}
-                                className="bg-gray-100 rounded-2xl p-5 w-[28rem] h-[20rem] ml-[1rem] shadow-md shadow-blue-400 text-[#3B82F6] flex flex-col min-h-0 overflow-hidden">
+                                className="bg-[#2A2D3A] rounded-2xl p-5 w-[28rem] h-[20rem] ml-[1rem] shadow-md shadow-[#5633F0] text-[#5633F0] flex flex-col min-h-0 overflow-hidden">
                                 <div className="flex items-center gap-3 mb-3">
                                     <MdOutlineInsertComment className="mt-1" />
                                     <h2 className="font-semibold">Comentários e atividade</h2>
@@ -223,12 +223,12 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                                             {...register("conteudo", { required: true })}
                                             type="text"
                                             placeholder="Escreva um comentário…"
-                                            className="w-full rounded-md border px-3 py-1.5 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-600"
+                                            className="w-full rounded-md border px-3 py-1.5 text-sm bg-[#2A2D3A] outline-none focus:ring-2 focus:ring-[#5633F0]"
                                         />
                                     </div>
                                     <button
                                         type="submit"
-                                        className="rounded-md  px-3 py-1.5 text-sm bg-[#3B82F6] text-white font-bold cursor-pointer"
+                                        className="rounded-md  px-3 py-1.5 text-sm bg-[#5633F0] text-white font-bold cursor-pointer"
                                     >
                                         Enviar
                                     </button>
@@ -239,10 +239,10 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                                         comentarios.map((c) => (
                                             <div key={c.id} className="py-1">
                                                 <p
-                                                    className="w-full max-w-full bg-white rounded-sm px-4 py-2 text-sm text-gray-600 
+                                                    className="w-full max-w-full bg-[#2A2D3A] rounded-sm px-4 py-2 text-sm text-gray-600 
                                              whitespace-pre-wrap break-words drop-shadow-md"
                                                 >
-                                                    <span className="font-semibold text-blue-600">
+                                                    <span className="font-semibold text-[#5633F0]">
                                                         {c.usuario?.nome || "Usuário desconhecido"}:
                                                     </span>{" "}
                                                     {c.conteudo}

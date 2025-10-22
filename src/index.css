@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Remove o fundo branco do autofill do Chrome/Edge/etc */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -12,7 +11,7 @@ input:-webkit-autofill:active {
   background-color: transparent !important;
 }
 
-/* Para Firefox */
+
 input:-moz-autofill,
 input:-moz-autofill-preview {
   filter: none;

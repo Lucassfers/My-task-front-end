@@ -254,8 +254,8 @@ export default function CardLista() {
     }
 
     return (
-        <div className=" pt-6 w-[75vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem]">
-            <h1 className="text-2xl font-bold mb-6 text-[#3B82F6] border-[#3B82F6] border-b-2">
+        <div className=" pt-6 w-[75vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem] bg-[#1A1D26] px-[2rem] border-[#2A2D3A] border-2">
+            <h1 className="text-2xl font-bold mb-6 text-[#5633F0] border-[#5633F0] border-b-2">
                 {board.titulo}
             </h1>
             {listas.length ? (
@@ -263,8 +263,8 @@ export default function CardLista() {
                     {listas.map((lista) => (
                         <div
                             key={lista.id}
-                            className="text-[#3B82F6] bg-[#FFFFFF] p-4 rounded-[8px] shadow-xl w-[15rem] hover:shadow-2xl
-                            flex flex-col h-[50vh] min-h-0 flex-shrink-0">
+                            className="text-[#5633F0] bg-[#0B0E13] p-4 rounded-[8px] shadow-xl w-[15rem] hover:shadow-2xl
+                            flex flex-col h-[50vh] min-h-0 flex-shrink-0 border-[#2A2D3A] border-2">
                             <div className="flex justify-between items-center mb-3">
                                 {editandoListaId === lista.id ? (
                                     <input
