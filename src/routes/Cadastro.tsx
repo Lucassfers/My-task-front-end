@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
+import { FaRegCalendarCheck } from "react-icons/fa";
 
 
 type InputsCadastro = {
@@ -51,18 +52,21 @@ export default function CadastroUsuario() {
     }
 
     return (
-        <div className="relative flex items-center justify-center min-h-screen">
-            <div className="finisher-header absolute inset-0 w-full h-full" />
+        <div className="relative flex items-center justify-center min-h-screen  bg-[#0E1014]/5">
+            <div className="finisher-header absolute inset-0 w-full h-full " />
 
-            <div className="relative w-full max-w-sm p-6 bg-white rounded-2xl shadow-lg py-14 transition-colors z-10">
-                <h1 className="text-2xl font-bold text-left mb-6">Cadastro de Usuários</h1>
-                <form onSubmit={handleSubmit(cadastrarUsuario)} className="space-y-4">
+            <div className="relative w-full max-w-sm p-6 bg-[#0E1014] rounded-2xl shadow-lg py-14 transition-colors z-10 text-white">
+                <div className="flex">
+                    <FaRegCalendarCheck size={24} className="text-white mt-1" />
+                    <h1 className="text-2xl font-bold text-left mb-6 ml-2">Cadastre-se já!</h1>
+                </div>
+                <form onSubmit={handleSubmit(cadastrarUsuario)} className="space-y-4 text-white">
                     <div>
                         <input
                             type="text"
                             placeholder="Nome"
                             id="nome"
-                            className="w-full p-2 border-b-2 border-blue-500 focus:outline-none"
+                            className="w-full p-2 border-b-2 focus:outline-none border-[#5633F0] bg-transparent text-white placeholder:text-gray-400"
                             required {...register("nome")}
                         />
                     </div>
@@ -71,27 +75,27 @@ export default function CadastroUsuario() {
                             type="email"
                             placeholder="E-mail"
                             id="email"
-                            className="w-full p-2 border-b-2 border-blue-500 focus:outline-none"
+                            className="w-full p-2 border-b-2 border-[#5633F0] focus:outline-none bg-transparent text-white placeholder:text-gray-400"
                             required {...register("email")}
                         />
                     </div>
                     <div>
-                        <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha de Acesso:</label>
-                        <input type="password" id="password" placeholder="••••••••" className="w-full p-2 border-b-2 border-blue-500 focus:outline-none" required
+                        <label htmlFor="password" className="block mb-2 text-sm font-medium text-white">Senha de Acesso:</label>
+                        <input type="password" id="password" placeholder="••••••••" className="w-full p-2 border-b-2 border-[#5633F0] focus:outline-none bg-transparent text-white placeholder:text-gray-400" required
                             {...register("senha")} />
-                        <p className="mt-1 text-xs text-gray-500">
+                        <p className="mt-1 text-xs text-gray-400">
                             A senha deve ter no mínimo 8 caracteres, incluindo maiúscula, minúscula, número e símbolo.
                         </p>
                     </div>
                     <div>
-                        <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirme a Senha:</label>
-                        <input type="password" id="confirm-password" placeholder="••••••••" className="w-full p-2 border-b-2 border-blue-500 focus:outline-none" required
+                        <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-white">Confirme a Senha:</label>
+                        <input type="password" id="confirm-password" placeholder="••••••••" className="w-full p-2 border-b-2 border-[#5633F0] focus:outline-none bg-transparent text-white placeholder:text-gray-400" required
                             {...register("senha2")} />
                     </div>
-                    <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded transition-colors hover:bg-blue-700 tracking-widest my-7">Criar sua Conta</button>
+                    <button type="submit" className="w-full bg-[#5633F0] text-white py-2 rounded transition-colors hover:bg-[#4B28D8] tracking-widest my-7">Criar sua Conta</button>
                 </form>
-                <p className="flex justify-center text-gray-500 mb-7 transition-all hover:text-lg bg-transparent border-none cursor-pointer itemscenter mx-auto">
-                    Já possui uma conta? <Link to="/login" className="text-blue-600 hover:underline ml-1">Faça Login</Link>
+                <p className="flex justify-center text-gray-400 mb-7 transition-all bg-transparent border-none cursor-pointer items-center mx-auto">
+                    Já possui uma conta? <Link to="/login" className="text-[#5633F0] hover:underline ml-1">Faça Login</Link>
                 </p>
             </div>
         </div>
