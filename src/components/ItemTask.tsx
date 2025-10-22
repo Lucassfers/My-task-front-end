@@ -154,7 +154,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                 <div className="flex items-center">
                     <input 
                         type="checkbox" 
-                        className="cursor-pointer ml-[0.4rem]"
+                        className="cursor-pointer ml-[0.4rem] w-5 h-5 accent-[#5633F0] rounded transition-all duration-300 hover:scale-110 "
                         checked={task.concluida || false}
                         onChange={toggleConcluirTask}
                     />
