@@ -175,20 +175,20 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                     
                 </div>
                 <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                    <div className="max-w-[90vw] h-[27rem] mr-[2rem] bg">
-                        <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[1rem] text-[#5633F0]">
+                    <div className="max-w-[90vw] h-[27rem] mr-[2rem] bg-black ">
+                        <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[3rem] text-[#5633F0]">
                             {lista.titulo}
                         </h1>
-                        <div className="flex items-center justify-between py-3 ">
-                            <h1 className="text-l font-bold pl-[1rem] text-[#5633F0]">{task.titulo}</h1>
+                        <div className="flex items-center justify-between py-3">
+                            <h1 className="text-l font-bold pl-[3rem] text-[#5633F0]">{task.titulo}</h1>
                         </div>
-                        <div className="flex gap-6 pl-[1rem]">
+                        <div className="flex justify-between pl-[3rem]">
                             <div className="bg-[#2A2D3A] rounded-2xl p-5 w-[27rem] h-[20rem] shadow-md shadow-[#5633F0]">
                                 <div className="flex items-center gap-2 mb-2">
                                     <FaRegCalendarCheck className="text-[#5633F0]" />
                                     <h3 className="font-bold  text-[#5633F0]">Descrição</h3>
                                     <div className="ml-[14rem] text-[#5633F0] cursor-pointer">
-                                        <button className="rounded-md border px-3 py-1.5 text-sm bg-[#5633F0] text-white font-bold hover:shadow-2xl ">
+                                        <button className="rounded-md px-3 py-1.5 text-sm bg-[#5633F0] text-white font-bold hover:shadow-2xl ">
                                             Editar
                                         </button>
                                     </div>
