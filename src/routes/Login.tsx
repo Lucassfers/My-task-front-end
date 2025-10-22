@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { useUsuarioStore } from "../context/UsuarioContext"
+import { FaRegCalendarCheck } from "react-icons/fa"
 
 type Inputs = {
   email: string
@@ -30,29 +31,33 @@ export default function Login() {
       const payload = JSON.stringify(dados)
       if (data.manter) {
         localStorage.setItem("usuarioKey", payload)
-        sessionStorage.removeItem("usuarioKey") 
+        sessionStorage.removeItem("usuarioKey")
       } else {
         sessionStorage.setItem("usuarioKey", payload)
-        localStorage.removeItem("usuarioKey") 
+        localStorage.removeItem("usuarioKey")
       }
 
-            navigate("/boards")
-        } else {
-            toast.error("Erro... Login ou senha incorretos")
-        }
-   }
+      navigate("/boards")
+    } else {
+      toast.error("Erro... Login ou senha incorretos")
+    }
+  }
 
   return (
     <div className="relative flex items-center justify-center min-h-screen">
       <div className="finisher-header absolute inset-0 w-full h-full" />
-      <div className="relative w-full max-w-sm p-6 bg-white rounded-2xl shadow-lg py-14 transition-colors z-10">
-        <h1 className="text-2xl font-bold text-left mb-6">Dados de Acesso</h1>
+      <div className="relative w-full max-w-sm p-6 bg-[#0E1014] rounded-2xl shadow-lg py-14 transition-colors z-10">
+        <div className="flex">
+          <FaRegCalendarCheck size={24} className="text-white mt-1" />
+          <h1 className="text-2xl font-bold text-left mb-6 text-white ml-2">Faça já seu Login!</h1>
+        </div>
         <form onSubmit={handleSubmit(verificaLogin)} className="space-y-4">
           <input
             type="email"
             placeholder="E-mail"
             id="email"
-            className="w-full p-2 border-b-2 border-blue-500 focus:outline-none"
+            className="w-full p-2 border-b-2 border-[#5633F0] bg-white focus:outline-none
+             autofill:shadow-[inset_0_0_0_1000px_#ffffff]"
             required
             {...register("email")}
           />
@@ -60,7 +65,7 @@ export default function Login() {
             type="password"
             placeholder="Senha"
             id="password"
-            className="w-full p-2 border-b-2 border-blue-500 focus:outline-none"
+            className="w-full p-2 border-b-2 border-[#5633F0] bg-white text-white placeholder-gray-400 focus:outline-none autofill:shadow-[inset_0_0_0_1000px_#ffffff]"
             required
             {...register("senha")}
           />
@@ -80,8 +85,8 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded transition-colors hover:bg-blue-700 tracking-widest my-7"
-            >
+            className="w-full bg-[#5633F0] text-white py-2 rounded transition-colors hover:bg-[#4B28D8] tracking-widest my-7"
+          >
             ENTRAR
           </button>
         </form>
@@ -90,7 +95,7 @@ export default function Login() {
           onClick={() => navigate("/cadastro")}
           className="flex justify-center text-gray-500 mb-7 transition-all hover:text-lg bg-transparent border-none cursor-pointer itemscenter mx-auto"
         >
-          Não possui conta? <Link to="/cadastro" className="text-blue-600 hover:underline ml-1">Cadastre-se!</Link>
+          Não possui conta? <Link to="/cadastro" className="text-[#5633F0] hover:underline ml-1">Cadastre-se!</Link>
         </button>
       </div>
     </div>

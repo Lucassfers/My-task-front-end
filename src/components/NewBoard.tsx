@@ -74,20 +74,20 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
   return (
     <>
       <div 
-        className="group w-full h-[10rem] bg-transparent border-2 border-dashed border-[#155fd6] rounded-[4px] cursor-pointer hover:border-[#3B82F6] transition-all duration-200 flex items-center justify-center"
+        className="group w-full h-[7.4rem]  bg-transparent border-2 border-dashed border-[#5633F0] rounded-[4px] cursor-pointer hover:border-[#5633F0] transition-all duration-200 flex items-center justify-center"
         onClick={handleClick}
       >
         <div className="text-center">
-          <span className="text-[#155fd6] group-hover:text-[#3B82F6] font-medium text-lg hover:text-xl transition-all duration-200">
+          <span className="text-[#5633F0] group-hover:text-[#5633F0] font-medium text-lg hover:text-xl transition-all duration-200">
             Adicionar
           </span>
         </div>
       </div>
       
       <ModalNewBoard isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div>
-          <form onSubmit={handleCreateBoard}>
-            <h2 className="text-2xl font-bold mb-6 text-[#3B82F6] text-start">Criar Novo Board</h2>
+        <div className="h-[20rem]">
+          <form onSubmit={handleCreateBoard} className="">
+            <h2 className="text-2xl font-bold mb-6 text-[#5633F0] text-start">Criar Novo Board</h2>
             
             <div className="mb-6">
               <label htmlFor="boardName" className="block text-sm font-medium text-gray-700 mb-2 text-start">
@@ -99,7 +99,7 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
                   id="boardName"
                   value={boardName}
                   onChange={(e) => setBoardName(e.target.value)}
-                  className="border rounded-md p-2 w-[100%] border-b-2 border-blue-500 focus:outline-none"
+                  className="border rounded-md p-2 w-[100%] border-b-2 border-[#5633F0] focus:outline-none"
                   placeholder="Digite o nome do board"
                   required
                 />
@@ -107,7 +107,7 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="opcoes" className="block text-sm font-medium text-gray-700 mb-2 text-start">
+              <label htmlFor="opcoes" className="block text-sm font-medium text-[#5633F0] mb-2 text-start">
                 Escolha o Motivo do Board
               </label>
               <div className="flex justify-center pr-8">
@@ -116,7 +116,7 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
                   id="opcoes" 
                   value={boardMotivo}
                   onChange={(e) => setBoardMotivo(e.target.value)}
-                  className="border rounded-md p-2 w-[100%] border-b-2 border-blue-500 focus:outline-none"
+                  className="border rounded-md p-2 w-[100%] border-b-2 border-[#5633F0] focus:outline-none"
                 >
                   <option value="TRABALHO">Trabalho</option>
                   <option value="ESTUDO">Estudos</option>
@@ -130,7 +130,7 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-[#3B82F6] text-white px-[40%] py-2 rounded-md hover:bg-[#2563eb] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="bg-[#5633F0] text-white px-[40%] py-2 rounded-md hover:bg-[#5633F0] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Criando..." : "Criar Board"}
               </button>
