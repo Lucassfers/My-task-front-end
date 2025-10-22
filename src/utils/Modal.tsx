@@ -26,11 +26,11 @@ const Modal: React.FC<propTypes> = ({ open, onClose, children }) => {
             onClick={onClose}
         >
             <div 
-                className="bg-white rounded-lg shadow-xl p-6  relative transform transition-all duration-300 animate-in slide-in-from-bottom-4"
+                className="bg-black rounded-lg shadow-xl p-6  relative transform transition-all duration-300 animate-in slide-in-from-bottom-4"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button 
-                    className="absolute top-3 right-3  hover:text-gray-600"
+                    className="absolute top-3 right-3 text-white hover:text-gray-400"
                     onClick={onClose}
                     aria-label="Fechar modal"
                 >

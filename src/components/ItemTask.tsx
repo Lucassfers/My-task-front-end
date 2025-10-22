@@ -175,7 +175,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                     
                 </div>
                 <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                    <div className="max-w-[90vw] h-[27rem] mr-[2rem] bg">
+                    <div className="max-w-[90vw] h-[27rem] mr-[2rem] bg-black">
                         <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[1rem] text-[#5633F0]">
                             {lista.titulo}
                         </h1>
@@ -188,7 +188,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                                     <FaRegCalendarCheck className="text-[#5633F0]" />
                                     <h3 className="font-bold  text-[#5633F0]">Descrição</h3>
                                     <div className="ml-[14rem] text-[#5633F0] cursor-pointer">
-                                        <button className="rounded-md border px-3 py-1.5 text-sm bg-[#5633F0] text-white font-bold hover:shadow-2xl ">
+                                        <button className="rounded-md px-3 py-1.5 text-sm bg-[#5633F0] text-white font-bold hover:shadow-2xl ">
                                             Editar
                                         </button>
                                     </div>
