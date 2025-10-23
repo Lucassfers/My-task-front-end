@@ -12,12 +12,12 @@ export function ModalNewBoard({ isOpen, onClose, children }: ModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 ">
-      <div className="bg-[#d9dbde] p-4 rounded-[10px] min-w-[320px] w-[30vw] h-[40vh] pl-[3rem]">
+      <div className="bg-[#1F2430] p-4 rounded-[10px] min-w-[320px] w-[30vw] h-[45vh] pl-[3rem]">
         <button
           onClick={onClose}
           className="ml-auto mb-2 block px-2 py-1"
         >
-          <IoCloseSharp className="text-[#5633F0] w-[2rem] h-[2rem] cursor-pointer hover:bg-[#5633F0] hover:text-white rounded-xl"/>
+          <IoCloseSharp className="text-white w-[2rem] h-[2rem] cursor-pointer hover:text-[#5633F0] rounded-xl"/>
         </button>
         {children ?? <h1></h1>}
       </div>
