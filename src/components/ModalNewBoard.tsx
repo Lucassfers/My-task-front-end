@@ -17,7 +17,7 @@ export function ModalNewBoard({ isOpen, onClose, children }: ModalProps) {
           onClick={onClose}
           className="ml-auto mb-2 block px-2 py-1"
         >
-          <IoCloseSharp className="text-[#3B82F6] w-[2rem] h-[2rem] cursor-pointer hover:bg-[#3B82F6] hover:text-white rounded-xl"/>
+          <IoCloseSharp className="text-[#5633F0] w-[2rem] h-[2rem] cursor-pointer hover:bg-[#5633F0] hover:text-white rounded-xl"/>
         </button>
         {children ?? <h1></h1>}
       </div>

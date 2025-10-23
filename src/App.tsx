@@ -57,7 +57,7 @@ export default function App({ termoPesquisa }: AppProps) {
   if (loading) return <div>Carregando...</div>
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] rounded-lg w-[80vw] mx-auto mt-[1rem]">
+    <div className="min-h-screen bg-[#0E1014] bg-opacity-80 w-[80vw] mx-auto ">
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {listaBoards}

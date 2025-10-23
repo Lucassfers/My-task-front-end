@@ -51,7 +51,7 @@ export default function Layout() {
 
   if (location.pathname === '/boards') {
     return (
-      <div className="bg-[#F5F7FA] min-h-screen">
+      <div className="bg-[#0E1014] min-h-screen">
         <Header onPesquisa={handlePesquisa} />
         <App termoPesquisa={termoPesquisa} />
       </div>
@@ -60,14 +60,14 @@ export default function Layout() {
 
   if (location.pathname === '/login' || location.pathname === '/cadastro') {
     return (
-      <div className="bg-[#F5F7FA] min-h-screen">
+      <div className="bg-[#0E1014]/92 min-h-screen">
         <Outlet />
       </div>
     );
   }
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen">
+    <div className="bg-[#0E1014] min-h-screen">
       <Header />
       <Outlet />
     </div>
