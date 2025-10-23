@@ -150,7 +150,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
     return (
         <>
             <li
-                className="bg-[#1A1D26] rounded-[8px] p-2 hover:bg-[#4B28D8] hover:text-white border-[#2A2D3A] border-2">
+                className="bg-[#1A1D26] rounded-[8px] p-2 hover:border-[#4B28D8] hover:border-2 hover:text-white border-[#2A2D3A] border-2">
                 <div className="flex items-center">
                     <input 
                         type="checkbox" 
@@ -170,34 +170,34 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                         className="cursor-pointer" 
                         onClick={alterarDestaque}
                     >
-                        {task.destaque ? <FaStar /> : <FaRegStar />}
+                        {task.destaque ? <FaStar className="text-white "/> : <FaRegStar/>}
                     </button>
                     
                 </div>
                 <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                    <div className="max-w-[90vw] h-[27rem] mr-[2rem] bg-black ">
-                        <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[3rem] text-[#5633F0]">
+                    <div className="max-w-[90vw] h-[27rem] mr-[2rem]  bg-[#0E1014]">
+                        <h1 className="text-2xl font-black leading-snug mb-2 w-[54.9vw] pl-[3rem] text-white">
                             {lista.titulo}
                         </h1>
                         <div className="flex items-center justify-between py-3">
-                            <h1 className="text-l font-bold pl-[3rem] text-[#5633F0]">{task.titulo}</h1>
+                            <h1 className="text-l font-bold pl-[3rem] text-white">{task.titulo}</h1>
                         </div>
-                        <div className="flex justify-between pl-[3rem]">
-                            <div className="bg-[#2A2D3A] rounded-2xl p-5 w-[27rem] h-[20rem] shadow-md shadow-[#5633F0]">
+                        <div className="flex justify-between pl-[3rem] ">
+                            <div className=" rounded-2xl p-5 w-[27rem] h-[20rem] border-[#2A2D3A] border-2 bg-[#1A1D26]">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <FaRegCalendarCheck className="text-[#5633F0]" />
-                                    <h3 className="font-bold  text-[#5633F0]">Descrição</h3>
-                                    <div className="ml-[14rem] text-[#5633F0] cursor-pointer">
+                                    <FaRegCalendarCheck className="text-white" />
+                                    <h3 className="font-bold  text-white">Descrição</h3>
+                                    <div className="ml-[14rem] text-white cursor-pointer">
                                         <button className="rounded-md px-3 py-1.5 text-sm bg-[#5633F0] text-white font-bold hover:shadow-2xl ">
                                             Editar
                                         </button>
                                     </div>
                                 </div>
-                                <p className="text-sm leading-relaxed whitespace-pre-wrap break-words text-[#5633F0] bg-[#2A2D3A] py-2 px-3 rounded-md min-h-[4rem] font-medium  ">
+                                <p className="text-sm leading-relaxed whitespace-pre-wrap break-words text-white bg-[#2A2D3A] py-2 px-3 rounded-md min-h-[2rem] font-medium  ">
                                     {task?.descricao?.trim() ? task.descricao : "Sem descrição"}
                                 </p>
                                 {task.prazo && (
-                                    <div className="mt-4 flex items-center gap-2 text-sm text-[#5633F0]">
+                                    <div className="mt-4 flex items-center gap-2 text-sm text-white">
                                         <span className="font-bold ">Prazo para:</span>
                                         <span className="opacity-90">
                                             {new Date(task.prazo).toLocaleDateString("pt-BR", {
@@ -211,7 +211,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                             </div>
                             <form
                                 onSubmit={handleSubmit(enviarComentario)}
-                                className="bg-[#2A2D3A] rounded-2xl p-5 w-[28rem] h-[20rem] ml-[1rem] shadow-md shadow-[#5633F0] text-[#5633F0] flex flex-col min-h-0 overflow-hidden">
+                                className="bg-[#1A1D26] border-2 border-[#2A2D3A] rounded-2xl p-5 w-[28rem] h-[20rem] ml-[1rem] shadow-md text-white flex flex-col min-h-0 overflow-hidden">
                                 <div className="flex items-center gap-3 mb-3">
                                     <MdOutlineInsertComment className="mt-1" />
                                     <h2 className="font-semibold">Comentários e atividade</h2>
@@ -239,10 +239,10 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                                         comentarios.map((c) => (
                                             <div key={c.id} className="py-1">
                                                 <p
-                                                    className="w-full max-w-full bg-[#2A2D3A] rounded-sm px-4 py-2 text-sm text-gray-600 
+                                                    className="w-full max-w-full text-white bg-[#2A2D3A] rounded-sm px-4 py-2 text-sm 
                                              whitespace-pre-wrap break-words drop-shadow-md"
                                                 >
-                                                    <span className="font-semibold text-[#5633F0]">
+                                                    <span className="font-black text-[#5633F0]">
                                                         {c.usuario?.nome || "Usuário desconhecido"}:
                                                     </span>{" "}
                                                     {c.conteudo}

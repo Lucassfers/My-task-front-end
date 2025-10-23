@@ -22,15 +22,15 @@ const Modal: React.FC<propTypes> = ({ open, onClose, children }) => {
 
     return (
         <div 
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-transparent flex items-center justify-center z-50 p-4"
             onClick={onClose}
         >
             <div 
-                className="bg-black rounded-lg shadow-xl p-6  relative transform transition-all duration-300 animate-in slide-in-from-bottom-4"
+                className="bg-[#0E1014] rounded-lg shadow-xl p-6  relative transform transition-all duration-300 animate-in slide-in-from-bottom-4"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button 
-                    className="absolute top-3 right-3 text-white hover:text-gray-400"
+                    className="absolute top-3 right-3 text-white hover:text-[#5633F0]"
                     onClick={onClose}
                     aria-label="Fechar modal"
                 >

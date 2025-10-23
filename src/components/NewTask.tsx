@@ -37,7 +37,7 @@ export default function NewTask({ onCreateTask }: NewTaskProps) {
   return (
     <div
       onClick={handleClick}
-      className="group bg-transparent border-2 border-dashed border-[#5633F0] cursor-pointer hover:border-[#5633F0] 
+      className=" cursor-pointer border-[#2A2D3A] hover:border-0 hover:bg-[#5633F0]/70
       transition-all duration-200 flex items-center justify-center p-3 rounded-[8px] min-h-[20px]">
       {criando ? (
         <input
@@ -47,11 +47,12 @@ export default function NewTask({ onCreateTask }: NewTaskProps) {
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
           placeholder="Nome da task..."
-          className="w-full bg-transparent border-none outline-none text-[#5633F0] placeholder-[#5633F0]/50 font-medium"
+          className="w-full bg-transparent border-none outline-none font-medium"
           autoFocus
         />
       ) : (
-        <span className="text-[#5633F0] group-hover:text-[#5633F0] font-semibold text-sm">+ Nova Task</span>
+        <span className="font-semibold text-sm">Adicionar uma Task</span>
+        
       )}
     </div>
   );
