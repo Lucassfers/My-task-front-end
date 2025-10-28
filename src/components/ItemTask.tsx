@@ -13,7 +13,8 @@ import type { ComentarioType } from "../utils/ComentarioType";
 
 
 // dnd-kit imports
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type listaTaskProps = {
     task: TaskType;
@@ -150,9 +151,17 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
             toast.error("Erro ao atualizar task");
         }
     }
+
+    // dnd-kit
+    const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id.toString()});
+    const style = { 
+        transition, 
+        transform: CSS.Transform.toString(transform) 
+    };
+
     return (
         <>
-        <SortableContext items={[task.id.toString()]} strategy={verticalListSortingStrategy}>
+            <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
 
             <li
                 className="bg-[#1A1D26] rounded-[8px] p-2 hover:border-[#4B28D8] hover:border-2 hover:text-white border-[#2A2D3A] border-2">
@@ -263,7 +272,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                     </div>
                 </Modal>
             </li>
-                                    </SortableContext>
+            </div>
         </>
     )
 }

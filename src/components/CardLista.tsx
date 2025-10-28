@@ -15,6 +15,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 // dnd-kit imports
 import { DndContext, closestCorners } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 
 export default function CardLista() {
@@ -260,8 +261,37 @@ export default function CardLista() {
 
     // dnd-kit
 
-    
 
+    const handleDragEnd = (event) => {
+    const {active, over} = event;
+    
+    if (!over || active.id === over.id) return;
+
+    // Converter IDs de string para number
+    const activeId = Number(active.id);
+    const overId = Number(over.id);
+
+    // Encontrar qual lista contém a task que foi arrastada
+    const listaComTask = listas.find(lista => 
+        lista.tasks?.some(task => task.id === activeId)
+    );
+
+    if (!listaComTask || !listaComTask.tasks) return;
+
+    // Encontrar as posições dentro dessa lista
+    const originalPos = listaComTask.tasks.findIndex(task => task.id === activeId);
+    const newPos = listaComTask.tasks.findIndex(task => task.id === overId);
+
+    // Reorganizar as tasks dessa lista
+    const tasksReordenadas = arrayMove(listaComTask.tasks, originalPos, newPos);
+
+    // Atualizar o estado de listas
+    setListas(listas.map(lista => 
+        lista.id === listaComTask.id 
+            ? { ...lista, tasks: tasksReordenadas }
+            : lista
+    ));
+};
     return (
         <div className=" pt-6 w-[75vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem] bg-[#1A1D26] px-[2rem] border-[#2A2D3A] border-2">
             <h1 className="text-2xl font-bold mb-6 text-gray-200 border-gray-200 border-b-2">
@@ -269,12 +299,14 @@ export default function CardLista() {
             </h1>
             {listas.length ? (
                 <div className="flex gap-4 overflow-x-auto">
-                    <DndContext collisionDetection={closestCorners}>
+                    <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+
                     {listas.map((lista) => (
                         <div
                         key={lista.id}
                             className="text-gray-200 bg-[#0B0E13] p-4 rounded-[8px] shadow-xl w-[15rem] hover:shadow-2xl
                             flex flex-col h-[50vh] min-h-0 flex-shrink-0 border-[#2A2D3A] border-2">
+                                <SortableContext items={lista.tasks?.map(task => task.id.toString())} strategy={verticalListSortingStrategy}>
                             <div className="flex justify-between items-center mb-3">
                                 {editandoListaId === lista.id ? (
                                     <input
@@ -337,6 +369,7 @@ export default function CardLista() {
                                 ) : null}
                                 <NewTask onCreateTask={(titulo) => criarNovaTask(lista.id, titulo)} />
                             </ul>
+                                </SortableContext>
                         </div>
                     ))}
                     </DndContext>
