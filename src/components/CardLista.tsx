@@ -6,7 +6,6 @@ import type { ListaType } from "../utils/ListaType";
 import type { TaskType } from "../utils/TaskType";
 import type { ComentarioType } from "../utils/ComentarioType";
 import { useUsuarioStore } from "../context/UsuarioContext";
-import { useDroppable } from "@dnd-kit/core";
 import { toast } from "sonner";
 import ItemTask from "./ItemTask";
 import NewLista from "./NewLista";
