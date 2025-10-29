@@ -153,7 +153,8 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
     }
 
     // dnd-kit
-    const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id.toString()});
+
+    const {attributes, listeners, setNodeRef, transform, transition } = useSortable({id: task.id.toString()});
     const style = { 
         transition, 
         transform: CSS.Transform.toString(transform) 
