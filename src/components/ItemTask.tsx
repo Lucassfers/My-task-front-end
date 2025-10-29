@@ -12,6 +12,10 @@ import { MdOutlineInsertComment } from "react-icons/md";
 import type { ComentarioType } from "../utils/ComentarioType";
 
 
+// dnd-kit imports
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 type listaTaskProps = {
     task: TaskType;
     tasks: TaskType[];
@@ -147,8 +151,19 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
             toast.error("Erro ao atualizar task");
         }
     }
+
+    // dnd-kit
+
+    const {attributes, listeners, setNodeRef, transform, transition } = useSortable({id: task.id.toString()});
+    const style = { 
+        transition, 
+        transform: CSS.Transform.toString(transform) 
+    };
+
     return (
         <>
+            <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+
             <li
                 className="bg-[#1A1D26] rounded-[8px] p-2 hover:border-[#4B28D8] hover:border-2 hover:text-white border-[#2A2D3A] border-2">
                 <div className="flex items-center">
@@ -157,19 +172,19 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                         className="cursor-pointer ml-[0.4rem] w-5 h-5 accent-[#5633F0] rounded transition-all duration-300 hover:scale-110 "
                         checked={task.concluida || false}
                         onChange={toggleConcluirTask}
-                    />
+                        />
                     <button
                         onClick={() => setIsOpen(true)}
                         className={`font-medium ml-[1rem] w-[8.5rem] cursor-pointer text-start transition-all ${
                             task.concluida ? 'line-through opacity-60' : ''
-                        }`}
-                    >
+                            }`}
+                            >
                         {task.titulo}
                     </button>
                     <button 
                         className="cursor-pointer" 
                         onClick={alterarDestaque}
-                    >
+                        >
                         {task.destaque ? <FaStar className="text-white "/> : <FaRegStar/>}
                     </button>
                     
@@ -224,12 +239,12 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                                             type="text"
                                             placeholder="Escreva um comentário…"
                                             className="w-full rounded-md border px-3 py-1.5 text-sm bg-[#2A2D3A] outline-none focus:ring-2 focus:ring-[#5633F0]"
-                                        />
+                                            />
                                     </div>
                                     <button
                                         type="submit"
                                         className="rounded-md  px-3 py-1.5 text-sm bg-[#5633F0] text-white font-bold cursor-pointer"
-                                    >
+                                        >
                                         Enviar
                                     </button>
                                 </div>
@@ -240,8 +255,8 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                                             <div key={c.id} className="py-1">
                                                 <p
                                                     className="w-full max-w-full text-white bg-[#2A2D3A] rounded-sm px-4 py-2 text-sm 
-                                             whitespace-pre-wrap break-words drop-shadow-md"
-                                                >
+                                                    whitespace-pre-wrap break-words drop-shadow-md"
+                                                    >
                                                     <span className="font-black text-[#5633F0]">
                                                         {c.usuario?.nome || "Usuário desconhecido"}:
                                                     </span>{" "}
@@ -258,6 +273,7 @@ export default function ItemTask({ task, tasks, setTasks, lista }: listaTaskProp
                     </div>
                 </Modal>
             </li>
+            </div>
         </>
     )
 }
