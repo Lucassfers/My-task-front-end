@@ -6,6 +6,7 @@ import type { ListaType } from "../utils/ListaType";
 import type { TaskType } from "../utils/TaskType";
 import type { ComentarioType } from "../utils/ComentarioType";
 import { useUsuarioStore } from "../context/UsuarioContext";
+import { useDroppable } from "@dnd-kit/core";
 import { toast } from "sonner";
 import ItemTask from "./ItemTask";
 import NewLista from "./NewLista";
@@ -14,8 +15,8 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 
 // dnd-kit imports
-import { DndContext, TouchSensor, closestCorners, useSensor, PointerSensor, KeyboardSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { DndContext, closestCorners, PointerSensor, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 
 export default function CardLista() {
@@ -29,7 +30,12 @@ export default function CardLista() {
     const listaComentariosRef = useRef<HTMLDivElement | null>(null);
     const [editandoListaId, setEditandoListaId] = useState<number | null>(null);
     const [novoTituloLista, setNovoTituloLista] = useState("");
+    
 
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+        useSensor(KeyboardSensor)
+    );
     useEffect(() => {
         if (!boardId) return;
         (async () => {
@@ -38,7 +44,7 @@ export default function CardLista() {
                 const dados = localStorage.getItem("usuarioKey") || sessionStorage.getItem("usuarioKey");
                 const usuarioData = dados ? JSON.parse(dados) as { token?: string } : null;
                 const token = usuarioData?.token ?? "";
-                
+
                 const response = await fetch(`${apiUrl}/boards/${boardId}/listas/tasks/comentarios`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -54,7 +60,7 @@ export default function CardLista() {
                         return 0;
                     })
                 }));
-                
+
                 setListas(listasOrdenadas);
             } catch (e) {
                 console.error(e);
@@ -62,7 +68,7 @@ export default function CardLista() {
                 setLoading(false);
             }
         })();
-        
+
     }, [boardId]);
 
     useEffect(() => {
@@ -178,7 +184,7 @@ export default function CardLista() {
             });
 
             if (response.status === 200) {
-                setListas(listas.map(l => 
+                setListas(listas.map(l =>
                     l.id === listaId ? { ...l, titulo: novoTituloLista } : l
                 ));
                 toast.success("Título da lista atualizado!");
@@ -242,9 +248,9 @@ export default function CardLista() {
                     comentarios: [],
                     concluida: false
                 };
-                
-                setListas(listas.map(l => 
-                    l.id === listaId 
+
+                setListas(listas.map(l =>
+                    l.id === listaId
                         ? { ...l, tasks: [...(l.tasks || []), taskCompleta] }
                         : l
                 ));
@@ -261,36 +267,39 @@ export default function CardLista() {
 
     // dnd-kit
 
-    const getTaskPos = (id) => {
+    const getTaskPos = (id: number) => {
         const lista = listas.find(l => l.tasks?.some(t => t.id === id));
         if (!lista || !lista.tasks) return -1;
         return lista.tasks.findIndex(task => task.id === id);
     }
 
 
-    const handleDragEnd = event => {
-    const {active, over} = event;
-    
-    if (active.id === over.id) return;
+    const handleDragEnd = (event: { active: any; over: any; }) => {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
 
-    const activeId = Number(active.id);
-    const overId = Number(over.id);
 
-    const listaComTask = listas.find(lista => 
-        lista.tasks?.some(task => task.id === activeId)
-    );
+        const activeId = Number(active.id);
+        const overId = Number(over.id);
 
-    const originalPos = getTaskPos(activeId);
-    const newPos = getTaskPos(overId);
+        const listaComTask: any = listas.find(lista =>
+            lista.tasks?.some(task => task.id === activeId)
+        );
 
-    const tasksReordenadas = arrayMove(listaComTask.tasks, originalPos, newPos);
+        const originalPos = getTaskPos(activeId);
+        const newPos = getTaskPos(overId);
 
-    setListas(listas.map(lista => 
-        lista.id === listaComTask.id 
-            ? { ...lista, tasks: tasksReordenadas }
-            : lista
-    ));
-};
+        const tasksReordenadas: any = arrayMove(listaComTask.tasks, originalPos, newPos);
+
+        setListas(listas.map(lista =>
+            lista.id === listaComTask.id
+                ? { ...lista, tasks: tasksReordenadas }
+                : lista
+        ));
+        if (active.id === over.id) return;
+        if (!listaComTask) return;
+        if (originalPos < 0 || newPos < 0) return;
+    };
     return (
         <div className=" pt-6 w-[75vw] h-[80vh] m-auto group  bg-blue rounded-sm mt-[1rem] bg-[#1A1D26] px-[2rem] border-[#2A2D3A] border-2">
             <h1 className="text-2xl font-bold mb-6 text-gray-200 border-gray-200 border-b-2">
@@ -299,82 +308,81 @@ export default function CardLista() {
             {listas.length ? (
                 <div className="flex gap-4 overflow-x-auto">
 
-                    <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+                    <DndContext sensors={sensors} onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
 
-                    {listas.map((lista) => (
-                        <div
-                        key={lista.id}
-                            className="text-gray-200 bg-[#0B0E13] p-4 rounded-[8px] shadow-xl w-[15rem] hover:shadow-2xl
+                        {listas.map((lista) => (
+                            <div
+                                key={lista.id}
+                                className="text-gray-200 bg-[#0B0E13] p-4 rounded-[8px] shadow-xl w-[15rem] hover:shadow-2xl
                             flex flex-col h-[50vh] min-h-0 flex-shrink-0 border-[#2A2D3A] border-2">
 
-                                <SortableContext items={lista.tasks?.map(task => task.id.toString())} strategy={verticalListSortingStrategy}>
-
-                            <div className="flex justify-between items-center mb-3">
-                                {editandoListaId === lista.id ? (
-                                    <input
-                                        type="text"
-                                        value={novoTituloLista}
-                                        onChange={(e) => setNovoTituloLista(e.target.value)}
-                                        className="flex-1 border-none  bg-transparent px-2 py-1 text-lg font-bold focus:outline-none"
-                                        autoFocus
-                                        onBlur={() => salvarEdicaoLista(lista.id)}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') salvarEdicaoLista(lista.id);
-                                            if (e.key === 'Escape') cancelarEdicaoLista();
-                                        }}
-                                    />
-                                ) : (
-                                    <>
-                                        <h2 className="text-lg font-bold">{lista.titulo}</h2>
-                                        <button onClick={() => iniciarEdicaoLista(lista.id, lista.titulo)}>
-                                            <FaPencil className="cursor-pointer hover:text-[#5633F0]" />
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                            <ul className="mt-2 flex-1 overflow-y-auto overflow-x-hidden pr-1 space-y-2">
-                                {lista.tasks?.length ? (
-                                    <>
-                                        {lista.tasks.map((task) => (
-                                            <ItemTask 
-                                            key={task.id}
-                                            task={{
-                                                ...task,
-                                                listaId: lista.id,
-                                            } as TaskType}
-                                            tasks={lista.tasks?.map(t => ({
-                                                ...t,
-                                                listaId: lista.id,
-                                            } as TaskType)) || []}
-                                            setTasks={(novasTasks) => {
-                                                if (typeof novasTasks === 'function') return;
-                                                const tasksAtualizadas = novasTasks.map(t => ({
-                                                    usuarioId: t.usuarioId,
-                                                    id: t.id,
-                                                    titulo: t.titulo,
-                                                    descricao: t.descricao,
-                                                    prazo: t.prazo,
-                                                    comentarios: t.comentarios,
-                                                    destaque: t.destaque,
-                                                    concluida: t.concluida,
-                                                }));
-                                                setListas(listas.map(l => 
-                                                    l.id === lista.id 
-                                                    ? { ...l, tasks: tasksAtualizadas }
-                                                    : l
-                                                ));
-                                            }}
-                                            lista={lista}
+                                <SortableContext items={(lista.tasks ?? []).map(task => task.id.toString())} strategy={verticalListSortingStrategy}>
+                                    <div className="flex justify-between items-center mb-3">
+                                        {editandoListaId === lista.id ? (
+                                            <input
+                                                type="text"
+                                                value={novoTituloLista}
+                                                onChange={(e) => setNovoTituloLista(e.target.value)}
+                                                className="flex-1 border-none  bg-transparent px-2 py-1 text-lg font-bold focus:outline-none"
+                                                autoFocus
+                                                onBlur={() => salvarEdicaoLista(lista.id)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') salvarEdicaoLista(lista.id);
+                                                    if (e.key === 'Escape') cancelarEdicaoLista();
+                                                }}
                                             />
-                                        ))}
-                                    </>
-                                ) : null}
-                                <NewTask onCreateTask={(titulo) => criarNovaTask(lista.id, titulo)} />
-                            </ul>
+                                        ) : (
+                                            <>
+                                                <h2 className="text-lg font-bold">{lista.titulo}</h2>
+                                                <button onClick={() => iniciarEdicaoLista(lista.id, lista.titulo)}>
+                                                    <FaPencil className="cursor-pointer hover:text-[#5633F0]" />
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                    <ul className="mt-2 flex-1 overflow-y-auto overflow-x-hidden pr-1 space-y-2">
+                                        {lista.tasks?.length ? (
+                                            <>
+                                                {lista.tasks.map((task) => (
+                                                    <ItemTask
+                                                        key={task.id}
+                                                        task={{
+                                                            ...task,
+                                                            listaId: lista.id,
+                                                        } as TaskType}
+                                                        tasks={lista.tasks?.map(t => ({
+                                                            ...t,
+                                                            listaId: lista.id,
+                                                        } as TaskType)) || []}
+                                                        setTasks={(novasTasks) => {
+                                                            if (typeof novasTasks === 'function') return;
+                                                            const tasksAtualizadas = novasTasks.map(t => ({
+                                                                usuarioId: t.usuarioId,
+                                                                id: t.id,
+                                                                titulo: t.titulo,
+                                                                descricao: t.descricao,
+                                                                prazo: t.prazo,
+                                                                comentarios: t.comentarios,
+                                                                destaque: t.destaque,
+                                                                concluida: t.concluida,
+                                                            }));
+                                                            setListas(listas.map(l =>
+                                                                l.id === lista.id
+                                                                    ? { ...l, tasks: tasksAtualizadas }
+                                                                    : l
+                                                            ));
+                                                        }}
+                                                        lista={lista}
+                                                    />
+                                                ))}
+                                            </>
+                                        ) : null}
+                                        <NewTask onCreateTask={(titulo) => criarNovaTask(lista.id, titulo)} />
+                                    </ul>
 
                                 </SortableContext>
-                        </div>
-                    ))}
+                            </div>
+                        ))}
                     </DndContext>
                     <NewLista onClick={criarNovaLista} />
                 </div>
