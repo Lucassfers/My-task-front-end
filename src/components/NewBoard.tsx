@@ -85,15 +85,15 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
       </div>
       
       <ModalNewBoard isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div className="h-[20rem]">
+        <div className="h-[20rem] bg-">
           <form onSubmit={handleCreateBoard} className="">
-            <h2 className="text-2xl font-bold mb-6 text-[#5633F0] text-start">Criar Novo Board</h2>
+            <h2 className="text-2xl font-bold mb-6 text-white text-start">Criar Novo Board</h2>
             
             <div className="mb-6">
-              <label htmlFor="boardName" className="block text-sm font-medium text-gray-700 mb-2 text-start">
+              <label htmlFor="boardName" className="block text-sm font-medium text-white mb-2 text-start ">
                 Nome do Board
               </label>
-              <div className="flex justify-center pr-8">
+              <div className="flex justify-center pr-8 text-white">
                 <input
                   type="text"
                   id="boardName"
@@ -107,16 +107,16 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="opcoes" className="block text-sm font-medium text-[#5633F0] mb-2 text-start">
+              <label htmlFor="opcoes" className="block text-sm font-medium text-white mb-2 text-start">
                 Escolha o Motivo do Board
               </label>
-              <div className="flex justify-center pr-8">
+              <div className="flex justify-center pr-8 text-white">
                 <select 
                   name="opcoes" 
                   id="opcoes" 
                   value={boardMotivo}
                   onChange={(e) => setBoardMotivo(e.target.value)}
-                  className="border rounded-md p-2 w-[100%] border-b-2 border-[#5633F0] focus:outline-none"
+                  className="border rounded-md p-2 w-[100%] border-b-2 border-[#5633F0] focus:outline-none focus:bg-[#1F2430] focus:border-[#5633F0] bg-[#1F2430] text-white "
                 >
                   <option value="TRABALHO">Trabalho</option>
                   <option value="ESTUDO">Estudos</option>
@@ -130,7 +130,7 @@ function NewBoard({ onClick }: { onClick?: () => void }) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-[#5633F0] text-white px-[40%] py-2 rounded-md hover:bg-[#5633F0] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="bg-[#5633F0] text-white px-[40%] py-2 rounded-md hover:bg-[#5a37f3] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isLoading ? "Criando..." : "Criar Board"}
               </button>
