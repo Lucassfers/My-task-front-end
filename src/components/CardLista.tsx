@@ -14,8 +14,8 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 
 // dnd-kit imports
-import { DndContext, TouchSensor, closestCorners, useSensor, PointerSensor, KeyboardSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { DndContext, TouchSensor, closestCorners, KeyboardSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 
 export default function CardLista() {
