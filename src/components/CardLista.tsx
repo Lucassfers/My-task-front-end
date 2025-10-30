@@ -14,7 +14,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 
 // dnd-kit imports
-import { DndContext, TouchSensor, closestCorners, KeyboardSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, TouchSensor, closestCorners, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 
